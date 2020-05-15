@@ -47,9 +47,16 @@ namespace Sylver.Network.Infrastructure
         /// <param name="socketAsyncEvent">Socket async event arguments.</param>
         private void ReceiveData(INetConnection client, SocketAsyncEventArgs socketAsyncEvent)
         {
-            if (!client.Socket.ReceiveAsync(socketAsyncEvent))
+            var userToken = socketAsyncEvent.UserToken as NetToken;
+
+            if (client.Socket == null)
             {
-                ProcessReceive(socketAsyncEvent.UserToken as NetToken, socketAsyncEvent);
+                ClearSocketEvent(socketAsyncEvent);
+                OnDisconnected(userToken.Client);
+            }
+            else if (!client.Socket.ReceiveAsync(socketAsyncEvent))
+            {
+                ProcessReceive(userToken, socketAsyncEvent);
             }
         }
 
