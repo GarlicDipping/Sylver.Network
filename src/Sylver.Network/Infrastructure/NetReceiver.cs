@@ -12,7 +12,6 @@ namespace Sylver.Network.Infrastructure
     internal abstract class NetReceiver : INetReceiver
     {
         private readonly NetPacketParser _packetParser;
-        private readonly IPacketProcessor _packetProcessor;
         private bool _disposedValue;
 
         /// <summary>
@@ -22,7 +21,6 @@ namespace Sylver.Network.Infrastructure
         public NetReceiver(IPacketProcessor packetProcessor)
         {
             _packetParser = new NetPacketParser(packetProcessor);
-            _packetProcessor = packetProcessor;
         }
 
         /// <inheritdoc />
@@ -187,7 +185,7 @@ namespace Sylver.Network.Infrastructure
         [ExcludeFromCodeCoverage]
         private void ProcessReceivedMessage(INetUser client, byte[] messageBuffer)
         {
-            using (INetPacketStream packet = _packetProcessor.CreatePacket(messageBuffer))
+            using (INetPacketStream packet = _packetParser.PacketProcessor.CreatePacket(messageBuffer))
             {
                 client.HandleMessage(packet);
             }

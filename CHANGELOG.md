@@ -8,6 +8,12 @@
 
 - **NetReceiver** : Fix `NetReceiver` packet parsing algorithm when server or client sends multiple packets at once. (PR [#6](https://github.com/Eastrall/Sylver.Network/pull/6))
 
+### Breaking Changes
+
+- **NetPacketStream**:
+  - `StringReadEncoding` renamed into `ReadEncoding`
+  - `StringWriteEncoding` renamed into `WriteEncoding`
+
 # [1.1.0](https://github.com/Eastrall/Sylver.Network/releases/tag/v1.1) (2019-10-31)
 
 ### Features
