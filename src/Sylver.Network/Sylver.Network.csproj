@@ -11,7 +11,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>socket; server; client; tcp; net-server; net-client; network; packet; packet-builder; packet-serializer; dotnet-core; dotnet-standard; csharp; library; easy-to-use</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <Description>Sylver.Network is a simple and fast networking library built with C# and the .NET Core Framework. It simplifies the creation of socket servers and clients over the TCP/IP protocol.</Description>
   </PropertyGroup>
 

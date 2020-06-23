@@ -1,4 +1,11 @@
-﻿# [1.2.0](https://github.com/Eastrall/Sylver.Network/releases/tag/v1.1) (2020-03-19)
+# [1.2.1](https://github.com/Eastrall/Sylver.Network/releases/tag/v1.2) (2020-05-15)
+
+### Fixes
+
+- Fix `NullReferenceException` when a client disconnects while receiving data
+- Fix `PacketProcessor` call on `NetReceiver` (PR [#10](https://github.com/Eastrall/Sylver.Network/pull/10))
+
+# [1.2.0](https://github.com/Eastrall/Sylver.Network/releases/tag/v1.2) (2020-03-19)
 
 ### Features
 
