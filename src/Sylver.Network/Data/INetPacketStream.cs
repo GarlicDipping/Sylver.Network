@@ -30,6 +30,34 @@ namespace Sylver.Network.Data
         /// </summary>
         byte[] Buffer { get; }
 
+        byte ReadByte();
+
+        sbyte ReadSByte();
+
+        char ReadChar();
+
+        bool ReadBoolean();
+
+        short ReadInt16();
+
+        ushort ReadUInt16();
+
+        int ReadInt32();
+
+        uint ReadUInt32();
+
+        long ReadInt64();
+
+        ulong ReadUInt64();
+
+        float ReadSingle();
+
+        double ReadDouble();
+
+        string ReadString();
+
+        byte[] ReadBytes(int count);
+
         /// <summary>
         /// Reads a <typeparamref name="T"/> value from the packet stream.
         /// </summary>
@@ -44,6 +72,34 @@ namespace Sylver.Network.Data
         /// <param name="amount">Amount to read.</param>
         /// <returns>An array of type <typeparamref name="T"/>.</returns>
         T[] Read<T>(int amount);
+
+        void WriteByte(byte value);
+
+        void WriteSByte(sbyte value);
+
+        void WriteChar(char value);
+
+        void WriteBoolean(bool value);
+
+        void WriteInt16(short value);
+
+        void WriteUInt16(ushort value);
+
+        void WriteInt32(int value);
+
+        void WriteUInt32(uint value);
+
+        void WriteSingle(float value);
+
+        void WriteDouble(double value);
+
+        void WriteInt64(long value);
+
+        void WriteUInt64(ulong value);
+
+        void WriteString(string value);
+
+        void WriteBytes(byte[] values);
 
         /// <summary>
         /// Writes a <typeparamref name="T"/> value in the packet stream.

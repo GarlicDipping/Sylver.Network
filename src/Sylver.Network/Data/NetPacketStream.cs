@@ -53,6 +53,60 @@ namespace Sylver.Network.Data
             State = NetPacketStateType.Read;
         }
 
+
+
+        byte INetPacketStream.ReadByte()
+        {
+            throw new NotImplementedException();
+        }
+
+        public sbyte ReadSByte()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public virtual char ReadChar() => _reader.ReadChar();
+
+        /// <inheritdoc />
+        public virtual bool ReadBoolean() => _reader.ReadBoolean();
+
+        /// <inheritdoc />
+        public virtual short ReadInt16() => _reader.ReadInt16();
+
+        /// <inheritdoc />
+        public virtual ushort ReadUInt16() => _reader.ReadUInt16();
+
+        /// <inheritdoc />
+        public virtual int ReadInt32() => _reader.ReadInt32();
+
+        /// <inheritdoc />
+        public virtual uint ReadUInt32() => _reader.ReadUInt32();
+
+        /// <inheritdoc />
+        public virtual long ReadInt64() => _reader.ReadInt64();
+
+        /// <inheritdoc />
+        public virtual ulong ReadUInt64() => _reader.ReadUInt64();
+
+        /// <inheritdoc />
+        public virtual float ReadSingle() => _reader.ReadSingle();
+
+        /// <inheritdoc />
+        public virtual double ReadDouble() => _reader.ReadDouble();
+
+        /// <inheritdoc />
+        public virtual string ReadString()
+        {
+            int stringLength = ReadInt32();
+            byte[] stringBytes = ReadBytes(stringLength);
+
+            return ReadEncoding.GetString(stringBytes);
+        }
+
+        /// <inheritdoc />
+        public virtual byte[] ReadBytes(int count) => _reader.ReadBytes(count);
+
         /// <inheritdoc />
         public virtual T Read<T>()
         {
@@ -101,6 +155,58 @@ namespace Sylver.Network.Data
         }
 
         /// <inheritdoc />
+        public virtual void WriteSByte(sbyte value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteChar(char value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteBoolean(bool value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteInt16(short value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteUInt16(ushort value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteInt32(int value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteUInt32(uint value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteSingle(float value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteDouble(double value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteInt64(long value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteUInt64(ulong value) => _writer.Write(value);
+
+        /// <inheritdoc />
+        public virtual void WriteString(string value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            WriteInt32(value.Length);
+
+            if (value.Length > 0)
+            {
+                WriteBytes(WriteEncoding.GetBytes(value));
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual void WriteBytes(byte[] values) => Write(values);
+
+        /// <inheritdoc />
         public virtual void Write<T>(T value)
         {
             if (State != NetPacketStateType.Write)
@@ -125,53 +231,21 @@ namespace Sylver.Network.Data
         /// <returns></returns>
         private T ReadPrimitive<T>()
         {
-            object primitiveValue = default;
-
-            switch (Type.GetTypeCode(typeof(T)))
+            object primitiveValue = Type.GetTypeCode(typeof(T)) switch
             {
-                case TypeCode.Byte:
-                    primitiveValue = _reader.ReadByte();
-                    break;
-                case TypeCode.SByte:
-                    primitiveValue = _reader.ReadSByte();
-                    break;
-                case TypeCode.Boolean:
-                    primitiveValue = _reader.ReadBoolean();
-                    break;
-                case TypeCode.Char:
-                    primitiveValue = _reader.ReadChar();
-                    break;
-                case TypeCode.Int16:
-                    primitiveValue = _reader.ReadInt16();
-                    break;
-                case TypeCode.UInt16:
-                    primitiveValue = _reader.ReadUInt16();
-                    break;
-                case TypeCode.Int32:
-                    primitiveValue = _reader.ReadInt32();
-                    break;
-                case TypeCode.UInt32:
-                    primitiveValue = _reader.ReadUInt32();
-                    break;
-                case TypeCode.Single:
-                    primitiveValue = _reader.ReadSingle();
-                    break;
-                case TypeCode.Int64:
-                    primitiveValue = _reader.ReadInt64();
-                    break;
-                case TypeCode.UInt64:
-                    primitiveValue = _reader.ReadUInt64();
-                    break;
-                case TypeCode.Double:
-                    primitiveValue = _reader.ReadDouble();
-                    break;
-                case TypeCode.String:
-                    int stringLength = _reader.ReadInt32();
-                    byte[] stringBytes = _reader.ReadBytes(stringLength);
-
-                    primitiveValue = ReadEncoding.GetString(stringBytes);
-                    break;
-            }
+                TypeCode.Byte => ReadByte(),
+                TypeCode.SByte => ReadSByte(),
+                TypeCode.Boolean => ReadBoolean(),
+                TypeCode.Char => ReadChar(),
+                TypeCode.Int16 => ReadInt16(),
+                TypeCode.UInt16 => ReadUInt16(),
+                TypeCode.Int32 => ReadInt32(),
+                TypeCode.UInt32 => ReadUInt32(),
+                TypeCode.Single => ReadSingle(),
+                TypeCode.Double => ReadDouble(),
+                TypeCode.String => ReadString(),
+                _ => default
+            };
 
             return (T)primitiveValue;
         }
