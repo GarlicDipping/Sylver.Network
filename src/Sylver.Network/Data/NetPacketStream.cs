@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Schema;
 
 namespace Sylver.Network.Data
 {
@@ -47,23 +48,14 @@ namespace Sylver.Network.Data
         /// </summary>
         /// <param name="buffer">Input buffer</param>
         public NetPacketStream(byte[] buffer)
-            : base(buffer, 0, buffer.Length, false, true)
+            : base(buffer, 0, buffer?.Length ?? throw new ArgumentNullException(nameof(buffer)), false, true)
         {
             _reader = new BinaryReader(this, ReadEncoding);
             State = NetPacketStateType.Read;
         }
 
-
-
-        byte INetPacketStream.ReadByte()
-        {
-            throw new NotImplementedException();
-        }
-
-        public sbyte ReadSByte()
-        {
-            throw new NotImplementedException();
-        }
+        /// <inheritdoc />
+        public virtual sbyte ReadSByte() => _reader.ReadSByte();
 
         /// <inheritdoc />
         public virtual char ReadChar() => _reader.ReadChar();
@@ -233,7 +225,7 @@ namespace Sylver.Network.Data
         {
             object primitiveValue = Type.GetTypeCode(typeof(T)) switch
             {
-                TypeCode.Byte => ReadByte(),
+                TypeCode.Byte => (byte)ReadByte(),
                 TypeCode.SByte => ReadSByte(),
                 TypeCode.Boolean => ReadBoolean(),
                 TypeCode.Char => ReadChar(),
@@ -243,6 +235,8 @@ namespace Sylver.Network.Data
                 TypeCode.UInt32 => ReadUInt32(),
                 TypeCode.Single => ReadSingle(),
                 TypeCode.Double => ReadDouble(),
+                TypeCode.Int64 => ReadInt64(),
+                TypeCode.UInt64 => ReadUInt64(),
                 TypeCode.String => ReadString(),
                 _ => default
             };

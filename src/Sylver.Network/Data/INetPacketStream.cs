@@ -30,7 +30,7 @@ namespace Sylver.Network.Data
         /// </summary>
         byte[] Buffer { get; }
 
-        byte ReadByte();
+        int ReadByte();
 
         sbyte ReadSByte();
 
