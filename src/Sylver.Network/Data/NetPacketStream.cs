@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Schema;
 
 namespace Sylver.Network.Data
 {
@@ -55,46 +54,43 @@ namespace Sylver.Network.Data
         }
 
         /// <inheritdoc />
-        public virtual sbyte ReadSByte() => _reader.ReadSByte();
+        public virtual new byte ReadByte() => Read<byte>();
 
         /// <inheritdoc />
-        public virtual char ReadChar() => _reader.ReadChar();
+        public virtual sbyte ReadSByte() => Read<sbyte>();
 
         /// <inheritdoc />
-        public virtual bool ReadBoolean() => _reader.ReadBoolean();
+        public virtual char ReadChar() => Read<char>();
 
         /// <inheritdoc />
-        public virtual short ReadInt16() => _reader.ReadInt16();
+        public virtual bool ReadBoolean() => Read<bool>();
 
         /// <inheritdoc />
-        public virtual ushort ReadUInt16() => _reader.ReadUInt16();
+        public virtual short ReadInt16() => Read<short>();
 
         /// <inheritdoc />
-        public virtual int ReadInt32() => _reader.ReadInt32();
+        public virtual ushort ReadUInt16() => Read<ushort>();
 
         /// <inheritdoc />
-        public virtual uint ReadUInt32() => _reader.ReadUInt32();
+        public virtual int ReadInt32() => Read<int>();
 
         /// <inheritdoc />
-        public virtual long ReadInt64() => _reader.ReadInt64();
+        public virtual uint ReadUInt32() => Read<uint>();
 
         /// <inheritdoc />
-        public virtual ulong ReadUInt64() => _reader.ReadUInt64();
+        public virtual long ReadInt64() => Read<long>();
 
         /// <inheritdoc />
-        public virtual float ReadSingle() => _reader.ReadSingle();
+        public virtual ulong ReadUInt64() => Read<ulong>();
 
         /// <inheritdoc />
-        public virtual double ReadDouble() => _reader.ReadDouble();
+        public virtual float ReadSingle() => Read<float>();
 
         /// <inheritdoc />
-        public virtual string ReadString()
-        {
-            int stringLength = ReadInt32();
-            byte[] stringBytes = ReadBytes(stringLength);
+        public virtual double ReadDouble() => Read<double>();
 
-            return ReadEncoding.GetString(stringBytes);
-        }
+        /// <inheritdoc />
+        public virtual string ReadString() => Read<string>();
 
         /// <inheritdoc />
         public virtual byte[] ReadBytes(int count) => _reader.ReadBytes(count);
@@ -147,53 +143,40 @@ namespace Sylver.Network.Data
         }
 
         /// <inheritdoc />
-        public virtual void WriteSByte(sbyte value) => _writer.Write(value);
+        public virtual void WriteSByte(sbyte value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteChar(char value) => _writer.Write(value);
+        public virtual void WriteChar(char value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteBoolean(bool value) => _writer.Write(value);
+        public virtual void WriteBoolean(bool value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteInt16(short value) => _writer.Write(value);
+        public virtual void WriteInt16(short value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteUInt16(ushort value) => _writer.Write(value);
+        public virtual void WriteUInt16(ushort value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteInt32(int value) => _writer.Write(value);
+        public virtual void WriteInt32(int value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteUInt32(uint value) => _writer.Write(value);
+        public virtual void WriteUInt32(uint value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteSingle(float value) => _writer.Write(value);
+        public virtual void WriteSingle(float value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteDouble(double value) => _writer.Write(value);
+        public virtual void WriteDouble(double value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteInt64(long value) => _writer.Write(value);
+        public virtual void WriteInt64(long value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteUInt64(ulong value) => _writer.Write(value);
+        public virtual void WriteUInt64(ulong value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteString(string value)
-        {
-            if (value == null)
-            {
-                return;
-            }
-
-            WriteInt32(value.Length);
-
-            if (value.Length > 0)
-            {
-                WriteBytes(WriteEncoding.GetBytes(value));
-            }
-        }
+        public virtual void WriteString(string value) => Write(value);
 
         /// <inheritdoc />
         public virtual void WriteBytes(byte[] values) => Write(values);
@@ -225,23 +208,35 @@ namespace Sylver.Network.Data
         {
             object primitiveValue = Type.GetTypeCode(typeof(T)) switch
             {
-                TypeCode.Byte => (byte)ReadByte(),
-                TypeCode.SByte => ReadSByte(),
-                TypeCode.Boolean => ReadBoolean(),
-                TypeCode.Char => ReadChar(),
-                TypeCode.Int16 => ReadInt16(),
-                TypeCode.UInt16 => ReadUInt16(),
-                TypeCode.Int32 => ReadInt32(),
-                TypeCode.UInt32 => ReadUInt32(),
-                TypeCode.Single => ReadSingle(),
-                TypeCode.Double => ReadDouble(),
-                TypeCode.Int64 => ReadInt64(),
-                TypeCode.UInt64 => ReadUInt64(),
-                TypeCode.String => ReadString(),
+                TypeCode.Byte => _reader.ReadByte(),
+                TypeCode.SByte => _reader.ReadSByte(),
+                TypeCode.Boolean => _reader.ReadBoolean(),
+                TypeCode.Char => _reader.ReadChar(),
+                TypeCode.Int16 => _reader.ReadInt16(),
+                TypeCode.UInt16 => _reader.ReadUInt16(),
+                TypeCode.Int32 => _reader.ReadInt32(),
+                TypeCode.UInt32 => _reader.ReadUInt32(),
+                TypeCode.Single => _reader.ReadSingle(),
+                TypeCode.Double => _reader.ReadDouble(),
+                TypeCode.Int64 => _reader.ReadInt64(),
+                TypeCode.UInt64 => _reader.ReadUInt64(),
+                TypeCode.String => InternalReadString(),
                 _ => default
             };
 
             return (T)primitiveValue;
+        }
+
+        /// <summary>
+        /// Reads a string from the current packet stream.
+        /// </summary>
+        /// <returns></returns>
+        private string InternalReadString()
+        {
+            int stringLength = ReadInt32();
+            byte[] stringBytes = ReadBytes(stringLength);
+
+            return ReadEncoding.GetString(stringBytes);
         }
 
         /// <summary>
@@ -291,6 +286,11 @@ namespace Sylver.Network.Data
                     break;
                 case TypeCode.String:
                     {
+                        if (value == null)
+                        {
+                            return;
+                        }
+
                         string stringValue = value.ToString();
 
                         _writer.Write(stringValue.Length);
