@@ -1,4 +1,5 @@
 ﻿using LiteNetwork.Common;
+using LiteNetwork.Common.Exceptions;
 using LiteNetwork.Common.Internal;
 using LiteNetwork.Protocol;
 using LiteNetwork.Protocol.Abstractions;
@@ -85,6 +86,17 @@ namespace LiteNetwork.Server
             {
                 throw new InvalidOperationException("Server is not running.");
             }
+
+            OnBeforeStop();
+            _sender.Stop();
+
+            if (_socket != null)
+            {
+                _socket.Dispose();
+            }
+
+            IsRunning = false;
+            OnAfterStop();
         }
 
         /// <inheritdoc />
@@ -172,13 +184,30 @@ namespace LiteNetwork.Server
         /// <param name="disconenctedUser"></param>
         protected virtual void OnClientDisconnected(TUser disconenctedUser) { }
 
+        /// <summary>
+        /// Called when an error occurs on the server.
+        /// </summary>
+        /// <param name="connection">Connection where the error occured.</param>
+        /// <param name="exception">Error exception.</param>
+        protected virtual void OnError(ILiteConnection connection, Exception exception)
+        {
+            if (connection is null)
+            {
+                _logger?.LogError(exception, $"An error has occured for user '{connection.Id}'.");
+            }
+            else
+            {
+                _logger?.LogError(exception, $"An error has occured.");
+            }
+        }
+
         private void OnClientAccepted(object sender, SocketAsyncEventArgs e)
         {
             TUser user = ActivatorUtilities.CreateInstance<TUser>(_serviceProvider);
 
             if (!_connectedUsers.TryAdd(user.Id, user))
             {
-                // error
+                throw new LiteNetworkException($"Failed to add user with id: '{user.Id}'. An user with same id already exists.");
             }
 
             user.Socket = e.AcceptSocket;
@@ -190,13 +219,19 @@ namespace LiteNetwork.Server
 
         private void OnAcceptorError(object sender, Exception e)
         {
-            _logger?.LogError(e, "An error occured while accepting an user.");
-            // TODO: invoke server on error for custom process.
+            OnError(null, e);
         }
 
         private void OnReceiverError(object sender, Exception e)
         {
-            _logger?.LogError(e, "Receiver error.");
+            if (e is LiteReceiverException receiveException)
+            {
+                OnError(receiveException.Connection, receiveException);
+            }
+            else
+            {
+                _logger?.LogError(e, "Receiver error.");
+            }
         }
 
         private void OnDisconnected(object sender, ILiteConnection e)

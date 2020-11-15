@@ -4,14 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{2D17E3E2-DE2D-4525-9937-773908E15299}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4A8D35B5-7954-4921-8DDF-B63AC30FC56E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteNetwork.Server", "src\LiteNetwork.Server\LiteNetwork.Server.csproj", "{051BB556-EDF5-4B91-993F-9B0DABD91095}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetwork.Server", "src\LiteNetwork.Server\LiteNetwork.Server.csproj", "{051BB556-EDF5-4B91-993F-9B0DABD91095}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteNetwork.Common", "src\LiteNetwork.Common\LiteNetwork.Common.csproj", "{3B5377E6-41C9-45F8-A093-2433D28AD4D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetwork.Common", "src\LiteNetwork.Common\LiteNetwork.Common.csproj", "{3B5377E6-41C9-45F8-A093-2433D28AD4D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteNetwork.Protocol", "src\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj", "{58BFC5AB-5D26-4798-8F9F-B51B4CC374A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetwork.Protocol", "src\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj", "{58BFC5AB-5D26-4798-8F9F-B51B4CC374A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

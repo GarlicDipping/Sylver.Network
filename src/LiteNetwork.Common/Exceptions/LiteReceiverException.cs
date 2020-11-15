@@ -6,7 +6,7 @@ namespace LiteNetwork.Common.Exceptions
     /// <summary>
     /// The exception that is thrown when an error occurs during the receive process.
     /// </summary>
-    public class LiteReceiverException : InvalidOperationException
+    public class LiteReceiverException : LiteNetworkException
     {
         /// <summary>
         /// Gets the connection that thrown the exception.

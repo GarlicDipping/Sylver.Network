@@ -57,7 +57,15 @@ namespace LiteNetwork.Server.Internal
         {
             if (socketAsyncEvent.SocketError == SocketError.Success)
             {
-                OnClientAccepted?.Invoke(this, socketAsyncEvent);
+                try
+                {
+                    OnClientAccepted?.Invoke(this, socketAsyncEvent);
+                }
+                catch (Exception exception)
+                {
+                    OnError?.Invoke(this, exception);
+                }
+
                 StartAccept();
             }
         }
