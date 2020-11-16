@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{2D17E3
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4A8D35B5-7954-4921-8DDF-B63AC30FC56E}"
@@ -17,6 +18,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetwork.Common", "src\LiteNetwork.Common\LiteNetwork.Common.csproj", "{3B5377E6-41C9-45F8-A093-2433D28AD4D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetwork.Protocol", "src\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj", "{58BFC5AB-5D26-4798-8F9F-B51B4CC374A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{08407BA9-FFBA-4A7E-8B6B-D0F0F74537FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteNetwork.Protocol.Tests", "tests\LiteNetwork.Protocol.Tests\LiteNetwork.Protocol.Tests.csproj", "{A937757A-7F08-4965-B371-630396A36A9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +41,10 @@ Global
 		{58BFC5AB-5D26-4798-8F9F-B51B4CC374A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58BFC5AB-5D26-4798-8F9F-B51B4CC374A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58BFC5AB-5D26-4798-8F9F-B51B4CC374A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A937757A-7F08-4965-B371-630396A36A9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A937757A-7F08-4965-B371-630396A36A9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A937757A-7F08-4965-B371-630396A36A9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A937757A-7F08-4965-B371-630396A36A9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +53,7 @@ Global
 		{051BB556-EDF5-4B91-993F-9B0DABD91095} = {4A8D35B5-7954-4921-8DDF-B63AC30FC56E}
 		{3B5377E6-41C9-45F8-A093-2433D28AD4D0} = {4A8D35B5-7954-4921-8DDF-B63AC30FC56E}
 		{58BFC5AB-5D26-4798-8F9F-B51B4CC374A7} = {4A8D35B5-7954-4921-8DDF-B63AC30FC56E}
+		{A937757A-7F08-4965-B371-630396A36A9E} = {08407BA9-FFBA-4A7E-8B6B-D0F0F74537FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97CFF3C5-B79C-4272-95B7-3E9267427D92}
