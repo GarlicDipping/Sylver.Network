@@ -1,0 +1,13 @@
+trigger:
+  branches:
+    exclude:
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: dotnet build --configuration Release
+  displayName: 'Build'
+- script: dotnet test
+  displayName: 'Test'
