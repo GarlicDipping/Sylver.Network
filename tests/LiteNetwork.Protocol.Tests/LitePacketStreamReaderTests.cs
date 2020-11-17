@@ -75,6 +75,7 @@ namespace LiteNetwork.Protocol.Tests
             PacketStreamReadTest(booleanValue, BitConverter.GetBytes(booleanValue));
         }
 
+        [Fact]
         public void PacketStreamReadBooleanMethodTest()
         {
             var booleanValue = _randomizer.Bool();

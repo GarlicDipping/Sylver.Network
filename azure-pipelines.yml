@@ -12,7 +12,7 @@ steps:
   displayName: 'Build'
 
 - script: |
-    dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[LiteNetwork.**.Tests*]*" /p:Exclude="[xunit*]*"
+    dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[xunit*]*"
   displayName: 'Test'
 
 - script: |
