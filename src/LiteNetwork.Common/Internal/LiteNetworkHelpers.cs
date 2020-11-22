@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
@@ -17,14 +16,7 @@ namespace LiteNetwork.Common
         /// <returns>Parsed <see cref="IPAddress"/>.</returns>
         public static IPAddress BuildIPAddress(string ipOrHost)
         {
-            if (string.IsNullOrEmpty(ipOrHost))
-            {
-                return null;
-            }
-
-            return IPAddress.TryParse(ipOrHost, out IPAddress address)
-                ? address
-                : Dns.GetHostAddressesAsync(ipOrHost).Result.FirstOrDefault(x => x != null && x.AddressFamily == AddressFamily.InterNetwork);
+            return Dns.GetHostAddressesAsync(ipOrHost).Result.FirstOrDefault(x => x != null && x.AddressFamily == AddressFamily.InterNetwork);
         }
 
         /// <summary>
@@ -36,11 +28,6 @@ namespace LiteNetwork.Common
         public static IPEndPoint CreateIpEndPoint(string ipOrHost, int port)
         {
             IPAddress address = BuildIPAddress(ipOrHost);
-
-            if (port <= IPEndPoint.MinPort || port > IPEndPoint.MaxPort)
-            {
-                throw new ArgumentException($"Invalid port: {port}");
-            }
 
             return new IPEndPoint(address, port);
         }
