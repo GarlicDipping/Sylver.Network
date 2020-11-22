@@ -1,58 +1,32 @@
-# Sylver.Network
+# LiteNetwork
 
-[![Build Status](https://travis-ci.org/Eastrall/Sylver.Network.svg?branch=master)](https://travis-ci.org/Eastrall/Sylver.Network)
-[![codecov](https://codecov.io/gh/Eastrall/Sylver.Network/branch/master/graph/badge.svg)](https://codecov.io/gh/Eastrall/Sylver.Network)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/efaa4d26423845a8ac80445d1371e40d)](https://www.codacy.com/manual/Eastrall/Sylver.Network?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Eastrall/Sylver.Network&amp;utm_campaign=Badge_Grade)
-[![Nuget](https://img.shields.io/nuget/v/Sylver.Network)](https://www.nuget.org/packages/Sylver.Network/)
+[![Build Status](https://dev.azure.com/eastrall/LiteNetwork/_apis/build/status/Eastrall.LiteNetwork?branchName=lite)](https://dev.azure.com/eastrall/LiteNetwork/_build/latest?definitionId=4&branchName=lite)
 
-`Sylver.Network` is a simple and fast networking library built with C# and the .NET Core Framework. It simplifies the creation of socket servers and clients over the TCP/IP protocol.
-
-## Introduction
-
-:information_source: `Sylver.Network` is a rewrite of my previous networking library named `Ether.Network`. This new version looks like the old one, but it has a better code structure, unit tests and performance improvements.
-
-Just like the old version, `Sylver.Network` kept the same *"easy-to-use"* concept that allows you to create your own socket servers and/or socket client in a **few lines** of code.
+`LiteNetwork` is a simple and fast networking library built with C# and compatible with .NET Standard 2. Its main goal is to simply the creation of basic socket servers over the TCP/IP protocol.
+It has been initialy developed for game development networking, but can also be used for other purposes.
 
 ## How to install
 
-Install `Sylver.Network` through the Visual Studio project package manager or using the following command in the Package Manager Console:
+`LiteNetwork` is shiped as a single packet (for now), you can install it through the Visual Studio project package manager or using the following command in the Package Manager Console:
 
-```
-$> Install-Package Sylver.Network
-```
-
-Or you can use the `dotnet` command:
-
-```
-$> dotnet add package Sylver.Network
+```sh
+$> Install-Package LiteNetwork
 ```
 
-## Features
+Or you can use the dotnet command:
 
-### Server
+```sh
+$> dotnet add package LiteNetwork
+```
 
-- Server configuration
-    - Listening host / port
-    - Allocated bytes per clients connected
-- Client management
-- Broadcast messages to all connected clients or a given list of connected clients
+## Getting started
 
-### Client
-
-- Client configuration
-    - Remote server address / port
-    - Allocated bytes for the receive and send operations
-    - Retry configuration (One time, limited time, infinite)
-- Connect to remote server
-- Disconnect from the remote server
-- Send/Receive messages to/from the server
-
-### Packets
-
-- Create packet streams
-- Read data from packet streams
-- Customize your packet structure with a packet processor
+TBA.
 
 ## Thanks
 
-**Thank you** to everyone who has contributed to `Ether.Network` with features, bug fixes and suggestions to make the Ether library better! All contributions have been integrated to `Sylver.Network` (and reworked to fit the library design).
+I would like to thank everyone that contributed to this library directly by fixing bugs or add new features, but also the people with who I had the chance to discuss about networking problematics which helped me to improve this library.
+
+## Credits
+
+Package Icon : from [Icons8](https://icons8.com/)
