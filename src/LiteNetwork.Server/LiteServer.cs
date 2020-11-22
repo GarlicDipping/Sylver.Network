@@ -88,6 +88,13 @@ namespace LiteNetwork.Server
             }
 
             OnBeforeStop();
+
+            foreach (var connectedUser in _connectedUsers)
+            {
+                DisconnectUser(connectedUser.Key);
+            }
+
+            _connectedUsers.Clear();
             _sender.Stop();
 
             if (_socket is not null)
@@ -158,12 +165,7 @@ namespace LiteNetwork.Server
         /// </summary>
         public void Dispose()
         {
-            foreach (var connectedUser in _connectedUsers)
-            {
-                DisconnectUser(connectedUser.Key);
-            }
-
-            _connectedUsers.Clear();
+            Stop();
         }
 
         /// <summary>
