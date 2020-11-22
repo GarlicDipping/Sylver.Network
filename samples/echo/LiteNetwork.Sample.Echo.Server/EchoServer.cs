@@ -1,5 +1,4 @@
-﻿using LiteNetwork.Protocol;
-using LiteNetwork.Server;
+﻿using LiteNetwork.Server;
 using System;
 
 namespace LiteNetwork.Sample.Echo.Server
@@ -19,24 +18,6 @@ namespace LiteNetwork.Sample.Echo.Server
         protected override void OnAfterStart()
         {
             Console.WriteLine($"Echo server listining on port: {Configuration.Port}");
-        }
-
-        protected override void OnClientConnected(ClientUser connectedUser)
-        {
-            Console.WriteLine($"New client connected with id: {connectedUser.Id}");
-
-            using var welcomePacket = new LitePacket();
-            welcomePacket.WriteString($"Hello {connectedUser.Id}!");
-            connectedUser.Send(welcomePacket);
-
-            base.OnClientConnected(connectedUser);
-        }
-
-        protected override void OnClientDisconnected(ClientUser disconenctedUser)
-        {
-            Console.WriteLine($"Client '{disconenctedUser.Id}' disconnected.");
-
-            base.OnClientDisconnected(disconenctedUser);
         }
     }
 }

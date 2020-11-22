@@ -38,7 +38,7 @@ namespace LiteNetwork.Server.Internal
         /// </summary>
         public void StartAccept()
         {
-            if (_socketEvent.AcceptSocket != null)
+            if (_socketEvent.AcceptSocket is not null)
             {
                 _socketEvent.AcceptSocket = null;
             }
@@ -80,7 +80,7 @@ namespace LiteNetwork.Server.Internal
         {
             try
             {
-                if (sender == null)
+                if (sender is null)
                 {
                     throw new ArgumentNullException(nameof(sender));
                 }

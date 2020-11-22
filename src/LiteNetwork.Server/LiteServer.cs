@@ -40,7 +40,7 @@ namespace LiteNetwork.Server
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
 
-            if (serviceProvider != null)
+            if (serviceProvider is not null)
             {
                 _logger = serviceProvider.GetService<ILogger<LiteServer<TUser>>>();
             }
@@ -69,13 +69,13 @@ namespace LiteNetwork.Server
             }
 
             OnBeforeStart();
-
+            
             _socket.Bind(LiteNetworkHelpers.CreateIpEndPoint(Configuration.Host, Configuration.Port));
             _socket.Listen(Configuration.Backlog);
-
-            IsRunning = true;
             _sender.Start();
             _acceptor.StartAccept();
+            IsRunning = true;
+
             OnAfterStart();
         }
 
@@ -90,7 +90,7 @@ namespace LiteNetwork.Server
             OnBeforeStop();
             _sender.Stop();
 
-            if (_socket != null)
+            if (_socket is not null)
             {
                 _socket.Dispose();
             }
@@ -108,19 +108,20 @@ namespace LiteNetwork.Server
                 return;
             }
 
-            OnClientDisconnected(client);
+            _logger?.LogInformation($"Client with id '{client.Id}' disconnected.");
+            client.OnDisconnected();
             client.Dispose();
         }
 
         /// <inheritdoc />
         public void SendTo(TUser connection, ILitePacketStream packet)
         {
-            if (connection == null)
+            if (connection is null)
             {
                 throw new ArgumentNullException(nameof(connection));
             }
 
-            if (packet == null)
+            if (packet is null)
             {
                 throw new ArgumentNullException(nameof(packet));
             }
@@ -131,12 +132,12 @@ namespace LiteNetwork.Server
         /// <inheritdoc />
         public void SendTo(IEnumerable<TUser> connections, ILitePacketStream packet)
         {
-            if (connections == null)
+            if (connections is null)
             {
                 throw new ArgumentNullException(nameof(connections));
             }
 
-            if (packet == null)
+            if (packet is null)
             {
                 throw new ArgumentNullException(nameof(packet));
             }
@@ -186,18 +187,6 @@ namespace LiteNetwork.Server
         protected virtual void OnAfterStop() { }
 
         /// <summary>
-        /// Triggers a child logic when a new user connects to the server.
-        /// </summary>
-        /// <param name="connectedUser"></param>
-        protected virtual void OnClientConnected(TUser connectedUser) { }
-
-        /// <summary>
-        /// Triggers a child logic when an user disconnects from the server.
-        /// </summary>
-        /// <param name="disconenctedUser"></param>
-        protected virtual void OnClientDisconnected(TUser disconenctedUser) { }
-
-        /// <summary>
         /// Called when an error occurs on the server.
         /// </summary>
         /// <param name="connection">Connection where the error occured.</param>
@@ -223,11 +212,12 @@ namespace LiteNetwork.Server
                 throw new LiteNetworkException($"Failed to add user with id: '{user.Id}'. An user with same id already exists.");
             }
 
+            _logger?.LogInformation($"New client connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
+
             user.Socket = e.AcceptSocket;
             user.SendAction = packet => SendTo(user, packet);
-
-            OnClientConnected(user);
-            _receiver.StartReceiving(user);
+            user.OnConnected();
+            _receiver.StartReceiving(user, user.Socket);
         }
 
         private void OnAcceptorError(object sender, Exception e)

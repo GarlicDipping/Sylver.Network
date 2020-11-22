@@ -23,6 +23,14 @@ namespace LiteNetwork.Server
 
         public void Send(ILitePacketStream packet) => SendAction?.Invoke(packet);
 
+        protected internal virtual void OnConnected()
+        {
+        }
+
+        protected internal virtual void OnDisconnected()
+        {
+        }
+
         public virtual void Dispose()
         {
             if (!_disposed)

@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace LiteNetwork.Common.Internal
 {
+    /// <summary>
+    /// Provides a mechanism to receive and parse incoming data.
+    /// </summary>
     internal abstract class LiteReceiver
     {
         private readonly ILitePacketProcessor _packetProcessor;
@@ -18,15 +21,29 @@ namespace LiteNetwork.Common.Internal
         public event EventHandler<ILiteConnection> Disconnected;
         public event EventHandler<Exception> Error;
 
+        /// <summary>
+        /// Creates a new <see cref="LiteReceiver"/> instance.
+        /// </summary>
+        /// <param name="packetProcessor">Packet processor to process incoming data and convert it into an exploitable packet stream.</param>
         protected LiteReceiver(ILitePacketProcessor packetProcessor)
         {
             _packetProcessor = packetProcessor;
             _packetParser = new LitePacketParser(_packetProcessor);
         }
 
-        public void StartReceiving(ILiteConnection connection)
+        /// <summary>
+        /// Starts the receive process for the given connection and socket.
+        /// </summary>
+        /// <param name="connection">User connection.</param>
+        /// <param name="socket">User socket.</param>
+        public void StartReceiving(ILiteConnection connection, Socket socket)
         {
+            var token = new LiteConnectionToken(connection, socket);
+            SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
 
+            socketAsyncEvent.UserToken = token;
+
+            ReceiveData(token, socketAsyncEvent);
         }
 
         /// <summary>
@@ -36,7 +53,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="socketAsyncEvent">Socket async event arguments.</param>
         private void ReceiveData(ILiteConnectionToken userConnectionToken, SocketAsyncEventArgs socketAsyncEvent)
         {
-            if (userConnectionToken.Socket == null)
+            if (userConnectionToken.Socket is null)
             {
                 ClearSocketEvent(socketAsyncEvent);
                 OnDisconnected(userConnectionToken.Connection);
@@ -171,8 +188,9 @@ namespace LiteNetwork.Common.Internal
             {
                 try
                 {
-                    // Create stream.
-                    connectionToken.Connection.HandleMessageAsync(null);
+                    using ILitePacketStream packetStream = _packetProcessor.CreatePacket(messageBuffer);
+
+                    connectionToken.Connection.HandleMessageAsync(packetStream);
                 }
                 catch (Exception e)
                 {

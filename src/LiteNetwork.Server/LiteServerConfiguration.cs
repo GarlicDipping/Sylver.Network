@@ -36,6 +36,13 @@
         public int ClientBufferSize { get; }
 
         /// <summary>
+        /// Creates a new empty <see cref="LiteServerConfiguration"/> instance.
+        /// </summary>
+        internal LiteServerConfiguration()
+        {
+        }
+
+        /// <summary>
         /// Creates a new basic <see cref="LiteServerConfiguration"/> instance.
         /// </summary>
         /// <param name="host">Server host address.</param>

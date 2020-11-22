@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LiteNetwork.Common.Internal
 {
+    /// <summary>
+    /// Provides a mechanism to send data.
+    /// </summary>
     internal abstract class LiteSender
     {
         private readonly BlockingCollection<LiteSendingMessage> _sendingCollection;
@@ -14,11 +17,13 @@ namespace LiteNetwork.Common.Internal
 
         private bool _disposedValue;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets a boolean value that indiciates if the sender process is running.
+        /// </summary>
         public bool IsRunning { get; private set; }
 
         /// <summary>
-        /// Creates and initializes a new <see cref="NetSender"/> base instance.
+        /// Creates and initializes a new <see cref="LiteSender"/> base instance.
         /// </summary>
         protected LiteSender()
         {
@@ -27,7 +32,9 @@ namespace LiteNetwork.Common.Internal
             _cancellationToken = _cancellationTokenSource.Token;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Starts the sender process.
+        /// </summary>
         public void Start()
         {
             Task.Factory.StartNew(ProcessSendingQueue,
@@ -37,14 +44,19 @@ namespace LiteNetwork.Common.Internal
             IsRunning = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Stops the sender process.
+        /// </summary>
         public void Stop()
         {
             _cancellationTokenSource.Cancel(false);
             IsRunning = false;
         }
-
-        /// <inheritdoc />
+        
+        /// <summary>
+        /// Sends a message.
+        /// </summary>
+        /// <param name="message">Lite message to be sent.</param>
         public void Send(LiteSendingMessage message) => _sendingCollection.Add(message);
 
         /// <summary>
