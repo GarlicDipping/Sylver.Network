@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 namespace LiteNetwork.Server.Abstractions
 {
-    public interface ILiteServer<TUser> where TUser : LiteServerUser
+    public interface ILiteServer<TUser> : IDisposable 
+        where TUser : LiteServerUser
     {
         bool IsRunning { get; }
 

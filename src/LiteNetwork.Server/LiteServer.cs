@@ -153,6 +153,19 @@ namespace LiteNetwork.Server
         public void SendToAll(ILitePacketStream packet) => SendTo(_connectedUsers.Values, packet);
 
         /// <summary>
+        /// Dispose the server resources and disconnects all the connected users.
+        /// </summary>
+        public void Dispose()
+        {
+            foreach (var connectedUser in _connectedUsers)
+            {
+                DisconnectUser(connectedUser.Key);
+            }
+
+            _connectedUsers.Clear();
+        }
+
+        /// <summary>
         /// Executes the child business logic before starting the server.
         /// </summary>
         protected virtual void OnBeforeStart() { }
