@@ -81,11 +81,7 @@ namespace LiteNetwork.Common.Internal
                 try
                 {
                     LiteMessage message = _sendingCollection.Take(_cancellationToken);
-
-                    if (message.Connection is not null && message.Data is not null)
-                    {
-                        SendMessage(message.Connection, message.Data);
-                    }
+                    SendMessage(message.Connection, message.Data);
                 }
                 catch (OperationCanceledException)
                 {
@@ -116,7 +112,7 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Socket async event arguments.</param>
-        protected void OnSendCompleted(object sender, SocketAsyncEventArgs e)
+        protected void OnSendCompleted(object? sender, SocketAsyncEventArgs e)
         {
             ClearSocketEvent(e);
         }
@@ -141,7 +137,7 @@ namespace LiteNetwork.Common.Internal
         }
 
         /// <summary>
-        /// Dispose the <see cref="NetSender"/> resources.
+        /// Dispose the <see cref="LiteSender"/> resources.
         /// </summary>
         public void Dispose()
         {

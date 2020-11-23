@@ -18,8 +18,8 @@ namespace LiteNetwork.Common.Internal
         private readonly ILitePacketProcessor _packetProcessor;
         private readonly LitePacketParser _packetParser;
 
-        public event EventHandler<ILiteConnection> Disconnected;
-        public event EventHandler<Exception> Error;
+        public event EventHandler<ILiteConnection>? Disconnected;
+        public event EventHandler<Exception>? Error;
 
         /// <summary>
         /// Creates a new <see cref="LiteReceiver"/> instance.
@@ -40,7 +40,6 @@ namespace LiteNetwork.Common.Internal
         {
             var token = new LiteConnectionToken(connection, socket);
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
-
             socketAsyncEvent.UserToken = token;
 
             ReceiveData(token, socketAsyncEvent);
@@ -53,12 +52,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="socketAsyncEvent">Socket async event arguments.</param>
         private void ReceiveData(ILiteConnectionToken userConnectionToken, SocketAsyncEventArgs socketAsyncEvent)
         {
-            if (userConnectionToken.Socket is null)
-            {
-                ClearSocketEvent(socketAsyncEvent);
-                OnDisconnected(userConnectionToken.Connection);
-            }
-            else if (!userConnectionToken.Socket.ReceiveAsync(socketAsyncEvent))
+            if (!userConnectionToken.Socket.ReceiveAsync(socketAsyncEvent))
             {
                 ProcessReceive(userConnectionToken, socketAsyncEvent);
             }
@@ -74,15 +68,11 @@ namespace LiteNetwork.Common.Internal
         {
             try
             {
-                if (socketAsyncEvent is null)
-                {
-                    throw new ArgumentNullException(nameof(socketAsyncEvent), "Cannot receive data from a null socket event.");
-                }
-
                 if (socketAsyncEvent.BytesTransferred > 0)
                 {
                     if (socketAsyncEvent.SocketError == SocketError.Success)
                     {
+                        // TODO: socketAsyncEvent.Buffer can be null
                         IEnumerable<byte[]> messages = _packetParser.ParseIncomingData(clientToken.DataToken, socketAsyncEvent.Buffer, socketAsyncEvent.BytesTransferred);
 
                         if (messages.Any())
@@ -123,7 +113,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="sender">Sender.</param>
         /// <param name="e">Socket async event arguments.</param>
         [ExcludeFromCodeCoverage]
-        protected internal void OnCompleted(object sender, SocketAsyncEventArgs e)
+        protected internal void OnCompleted(object? sender, SocketAsyncEventArgs e)
         {
             try
             {
@@ -189,7 +179,6 @@ namespace LiteNetwork.Common.Internal
                 try
                 {
                     using ILitePacketStream packetStream = _packetProcessor.CreatePacket(messageBuffer);
-
                     connectionToken.Connection.HandleMessageAsync(packetStream);
                 }
                 catch (Exception e)

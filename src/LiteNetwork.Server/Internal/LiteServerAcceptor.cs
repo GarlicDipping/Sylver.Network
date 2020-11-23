@@ -15,12 +15,12 @@ namespace LiteNetwork.Server.Internal
         /// <summary>
         /// Event fired when a client is accepted.
         /// </summary>
-        public event EventHandler<SocketAsyncEventArgs> OnClientAccepted;
+        public event EventHandler<SocketAsyncEventArgs>? OnClientAccepted;
 
         /// <summary>
         /// Event fired when an error occurs during the acceptation process.
         /// </summary>
-        public event EventHandler<Exception> OnError;
+        public event EventHandler<Exception>? OnError;
 
         /// <summary>
         /// Creates a new <see cref="LiteServerAcceptor"/> instance.
@@ -76,7 +76,7 @@ namespace LiteNetwork.Server.Internal
         /// <param name="sender">Sender.</param>
         /// <param name="e">Socket async event arguments.</param>
         [ExcludeFromCodeCoverage]
-        private void OnSocketCompleted(object sender, SocketAsyncEventArgs e)
+        private void OnSocketCompleted(object? sender, SocketAsyncEventArgs e)
         {
             try
             {

@@ -5,7 +5,7 @@
         /// <summary>
         /// Gets or sets the message header data.
         /// </summary>
-        public byte[] HeaderData { get; set; }
+        public byte[]? HeaderData { get; set; }
 
         /// <summary>
         /// Gets or sets the number of bytes received for the the message header.
@@ -25,7 +25,7 @@
         /// <summary>
         /// Gets or sets the received message data.
         /// </summary>
-        public byte[] MessageData { get; set; }
+        public byte[]? MessageData { get; set; }
 
         /// <summary>
         /// Gets or sets the data start offset.
