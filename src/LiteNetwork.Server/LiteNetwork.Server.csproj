@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Version>0.1.0</Version>
     <Authors>Filipe GP</Authors>
@@ -12,6 +12,7 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/Eastrall/LiteNetwork</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
