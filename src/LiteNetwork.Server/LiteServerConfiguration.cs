@@ -39,6 +39,7 @@
         /// Creates a new empty <see cref="LiteServerConfiguration"/> instance.
         /// </summary>
         internal LiteServerConfiguration()
+            : this("", 0)
         {
         }
 
