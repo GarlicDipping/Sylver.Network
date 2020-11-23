@@ -1,7 +1,7 @@
 ﻿using LiteNetwork.Protocol.Abstractions;
 using LiteNetwork.Protocol;
 
-namespace LiteNetwork.Server.DependencyInjection
+namespace LiteNetwork.Server.Hosting
 {
     public class LiteServerBuilderOptions
     {

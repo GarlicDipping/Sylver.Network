@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace LiteNetwork.Server.DependencyInjection
+namespace LiteNetwork.Server.Hosting
 {
     public static class HostBuilderExtensions
     {
