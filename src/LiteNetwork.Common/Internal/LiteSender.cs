@@ -9,9 +9,9 @@ namespace LiteNetwork.Common.Internal
     /// <summary>
     /// Provides a mechanism to send data.
     /// </summary>
-    internal abstract class LiteSender
+    internal abstract class LiteSender : IDisposable
     {
-        private readonly BlockingCollection<LiteSendingMessage> _sendingCollection;
+        private readonly BlockingCollection<LiteMessage> _sendingCollection;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly CancellationToken _cancellationToken;
 
@@ -27,7 +27,7 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         protected LiteSender()
         {
-            _sendingCollection = new BlockingCollection<LiteSendingMessage>();
+            _sendingCollection = new BlockingCollection<LiteMessage>();
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
         }
@@ -57,7 +57,7 @@ namespace LiteNetwork.Common.Internal
         /// Sends a message.
         /// </summary>
         /// <param name="message">Lite message to be sent.</param>
-        public void Send(LiteSendingMessage message) => _sendingCollection.Add(message);
+        public void Send(LiteMessage message) => _sendingCollection.Add(message);
 
         /// <summary>
         /// Gets a <see cref="SocketAsyncEventArgs"/> for the sending operation.
@@ -80,7 +80,7 @@ namespace LiteNetwork.Common.Internal
             {
                 try
                 {
-                    LiteSendingMessage message = _sendingCollection.Take(_cancellationToken);
+                    LiteMessage message = _sendingCollection.Take(_cancellationToken);
 
                     if (message.Connection is not null && message.Data is not null)
                     {

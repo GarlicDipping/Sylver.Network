@@ -5,7 +5,7 @@ namespace LiteNetwork.Common.Internal
     /// <summary>
     /// Provides a data structure for an outgoing lite message.
     /// </summary>
-    internal sealed class LiteSendingMessage
+    internal sealed class LiteMessage
     {
         /// <summary>
         /// Gets the socket connection where the message will be sent.
@@ -18,11 +18,11 @@ namespace LiteNetwork.Common.Internal
         public byte[] Data { get; }
 
         /// <summary>
-        /// Creates a new <see cref="LiteSendingMessage"/> instance.
+        /// Creates a new <see cref="LiteMessage"/> instance.
         /// </summary>
         /// <param name="connection">Socket connection.</param>
         /// <param name="data">Message data.</param>
-        public LiteSendingMessage(Socket connection, byte[] data)
+        public LiteMessage(Socket connection, byte[] data)
         {
             Connection = connection;
             Data = data;
