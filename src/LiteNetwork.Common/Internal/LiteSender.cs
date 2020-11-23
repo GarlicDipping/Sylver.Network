@@ -95,21 +95,15 @@ namespace LiteNetwork.Common.Internal
         }
 
         /// <summary>
-        /// Sends the message data to the given <see cref="INetConnection"/>.
+        /// Sends the message data to the given connection Socket.
         /// </summary>
-        /// <param name="connection">Client connection.</param>
+        /// <param name="connectionSocket">Client connection.</param>
         /// <param name="data">Message data.</param>
         private void SendMessage(Socket connectionSocket, byte[] data)
         {
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
 
             socketAsyncEvent.SetBuffer(data, 0, data.Length);
-
-            if (connectionSocket is null)
-            {
-                ClearSocketEvent(socketAsyncEvent);
-                return;
-            }
 
             if (!connectionSocket.SendAsync(socketAsyncEvent))
             {
