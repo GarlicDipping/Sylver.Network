@@ -133,7 +133,7 @@ namespace LiteNetwork.Server
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            _sender.Send(new LiteSendingMessage(connection.Socket, packet.Buffer));
+            _sender.Send(new LiteMessage(connection.Socket, packet.Buffer));
         }
 
         /// <inheritdoc />
@@ -153,7 +153,7 @@ namespace LiteNetwork.Server
 
             foreach (TUser connection in connections)
             {
-                _sender.Send(new LiteSendingMessage(connection.Socket, messageData));
+                _sender.Send(new LiteMessage(connection.Socket, messageData));
             }
         }
 
