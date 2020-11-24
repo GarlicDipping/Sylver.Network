@@ -23,9 +23,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{08407BA9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetwork.Protocol.Tests", "tests\LiteNetwork.Protocol.Tests\LiteNetwork.Protocol.Tests.csproj", "{A937757A-7F08-4965-B371-630396A36A9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteNetwork.Common.Tests", "tests\LiteNetwork.Common.Tests\LiteNetwork.Common.Tests.csproj", "{67D8DC91-886A-48D4-8011-9E18827B1ADF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetwork.Common.Tests", "tests\LiteNetwork.Common.Tests\LiteNetwork.Common.Tests.csproj", "{67D8DC91-886A-48D4-8011-9E18827B1ADF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteNetwork.Server.Tests", "tests\LiteNetwork.Server.Tests\LiteNetwork.Server.Tests.csproj", "{3BC3FC47-46FD-49A7-A37F-E83ACABA41AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteNetwork.Server.Tests", "tests\LiteNetwork.Server.Tests\LiteNetwork.Server.Tests.csproj", "{3BC3FC47-46FD-49A7-A37F-E83ACABA41AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CAFA623B-2C35-458A-AC0F-AD881286B998}"
+	ProjectSection(SolutionItems) = preProject
+		build\azure-pipelines.yml = build\azure-pipelines.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
