@@ -94,6 +94,12 @@ namespace Sylver.Network.Infrastructure
 
             socketAsyncEvent.SetBuffer(data, 0, data.Length);
 
+            if (connection.Socket == null)
+            {
+                ClearSocketEvent(socketAsyncEvent);
+                return;
+            }
+
             if (!connection.Socket.SendAsync(socketAsyncEvent))
             {
                 OnSendCompleted(this, socketAsyncEvent);
