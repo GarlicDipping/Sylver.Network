@@ -6,21 +6,35 @@ namespace LiteNetwork.Server.Hosting
     public class LiteServerBuilderOptions
     {
         /// <summary>
-        /// Gets the server configuration.
+        /// Gets or sets the server's listening host.
         /// </summary>
-        public LiteServerConfiguration Configuration { get; }
+        public string Host { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the server's listening port.
+        /// </summary>
+        public int Port { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum of pending connections queue.
+        /// </summary>
+        public int Backlog { get; set; } = LiteServerConfiguration.DefaultBacklog;
+
+        /// <summary>
+        /// Gets or sets the handled client buffer size.
+        /// </summary>
+        public int ClientBufferSize { get; set; } = LiteServerConfiguration.DefaultClientBufferSize;
 
         /// <summary>
         /// Gets the default server packet processor.
         /// </summary>
-        public ILitePacketProcessor PacketProcessor { get; }
+        public ILitePacketProcessor PacketProcessor { get; set; }
 
         /// <summary>
         /// Creates and initializes a new <see cref="LiteServerBuilderOptions"/> instance.
         /// </summary>
         internal LiteServerBuilderOptions()
         {
-            Configuration = new LiteServerConfiguration();
             PacketProcessor = new LitePacketProcessor();
         }
     }

@@ -22,12 +22,26 @@ namespace LiteNetwork.Server.Hosting
                     var liteServerBuilder = new LiteServerBuilderOptions();
                     builder(liteServerBuilder);
 
-                    var server = new LiteServer<TLiteServerUser>(liteServerBuilder.Configuration, liteServerBuilder.PacketProcessor, serviceProvider);
+                    var configuration = new LiteServerConfiguration(liteServerBuilder.Host, liteServerBuilder.Port, 
+                        liteServerBuilder.Backlog, liteServerBuilder.ClientBufferSize);
+                    var server = new LiteServer<TLiteServerUser>(configuration, liteServerBuilder.PacketProcessor, serviceProvider);
 
                     return server;
                 });
+
+                services.AddHostedService(serviceProvider =>
+                {
+                    var serverInstance = serviceProvider.GetRequiredService<ILiteServer<TLiteServerUser>>();
+
+                    return new LiteServerHostedService<TLiteServerUser>(serverInstance);
+                });
             });
 
+            return hostBuilder;
+        }
+
+        public static IHostBuilder UseLiteServer<TLiteServer>(this IHostBuilder hostBuilder)
+        {
             return hostBuilder;
         }
     }
