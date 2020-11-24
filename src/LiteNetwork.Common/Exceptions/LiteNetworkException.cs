@@ -21,7 +21,7 @@ namespace LiteNetwork.Common.Exceptions
         /// </summary>
         /// <param name="message">Exception message.</param>
         /// <param name="innerException">Inner exception.</param>
-        public LiteNetworkException(string message, Exception innerException)
+        public LiteNetworkException(string message, Exception? innerException)
             : base(message, innerException)
         {
         }

@@ -72,7 +72,12 @@ namespace LiteNetwork.Common.Internal
                 {
                     if (socketAsyncEvent.SocketError == SocketError.Success)
                     {
-                        // TODO: socketAsyncEvent.Buffer can be null
+
+                        if (socketAsyncEvent.Buffer is null)
+                        {
+                            throw new LiteNetworkException("A network error occurred: socket buffer is null.");
+                        }
+
                         IEnumerable<byte[]> messages = _packetParser.ParseIncomingData(clientToken.DataToken, socketAsyncEvent.Buffer, socketAsyncEvent.BytesTransferred);
 
                         if (messages.Any())

@@ -103,7 +103,6 @@ namespace LiteNetwork.Server.Internal
         public void Dispose()
         {
             _socketEvent.Dispose();
-            _listeningSocket.Dispose();
         }
     }
 }

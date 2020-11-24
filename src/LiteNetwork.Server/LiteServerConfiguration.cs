@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets the server's listening host.
         /// </summary>
-        public string Host { get; }
+        public string Host { get; } = string.Empty;
 
         /// <summary>
         /// Gets the server's listening port.
@@ -39,7 +39,6 @@
         /// Creates a new empty <see cref="LiteServerConfiguration"/> instance.
         /// </summary>
         internal LiteServerConfiguration()
-            : this("", 0)
         {
         }
 
