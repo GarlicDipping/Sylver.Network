@@ -24,7 +24,7 @@ namespace LiteNetwork.Common.Exceptions
         /// <param name="connection">Connection that thrown the exception.</param>
         /// <param name="socketError">Socket error.</param>
         /// <param name="innerException">Inner exception.</param>
-        public LiteReceiverException(ILiteConnection connection, SocketError socketError, Exception innerException = null)
+        public LiteReceiverException(ILiteConnection connection, SocketError socketError, Exception? innerException = null)
             : base($"An error as occured while receiving data for connection with id: '{connection.Id}'.", innerException)
         {
             Connection = connection;

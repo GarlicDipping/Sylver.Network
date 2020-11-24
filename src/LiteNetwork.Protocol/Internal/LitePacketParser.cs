@@ -104,6 +104,11 @@ namespace LiteNetwork.Protocol.Internal
         /// <returns>Client received data.</returns>
         private byte[] BuildClientMessageData(LiteDataToken token)
         {
+            if (token.MessageSize is null)
+            {
+                throw new ArgumentNullException("An error occurred: Message size cannot be null.");
+            }
+
             var bufferSize = PacketProcessor.IncludeHeader ? PacketProcessor.HeaderSize + token.MessageSize.Value : token.MessageSize.Value;
             var buffer = new byte[bufferSize];
 

@@ -6,7 +6,7 @@ namespace LiteNetwork.Protocol
     public class LitePacket : LitePacketStream, ILitePacket
     {
         /// <summary>
-        /// Gets the default <see cref="NetPacket"/> header size. (4 bytes)
+        /// Gets the default <see cref="LitePacket"/> header size. (4 bytes)
         /// </summary>
         public const int HeaderSize = sizeof(int);
 
@@ -34,7 +34,7 @@ namespace LiteNetwork.Protocol
         public long ContentLength => Length - HeaderSize;
 
         /// <summary>
-        /// Creates a new <see cref="NetPacket"/> in write-only mode.
+        /// Creates a new <see cref="LitePacket"/> in write-only mode.
         /// </summary>
         public LitePacket()
         {
@@ -42,7 +42,7 @@ namespace LiteNetwork.Protocol
         }
 
         /// <summary>
-        /// Creates a new <see cref="NetPacket"/> in read-only mode.
+        /// Creates a new <see cref="LitePacket"/> in read-only mode.
         /// </summary>
         /// <param name="buffer">Input buffer</param>
         public LitePacket(byte[] buffer)

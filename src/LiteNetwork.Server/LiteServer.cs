@@ -16,9 +16,9 @@ namespace LiteNetwork.Server
 {
     public class LiteServer<TUser> : ILiteServer<TUser> where TUser : LiteServerUser
     {
-        private readonly ILogger<LiteServer<TUser>> _logger;
+        private readonly ILogger<LiteServer<TUser>>? _logger;
         private readonly ILitePacketProcessor _packetProcessor;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider? _serviceProvider;
         private readonly ConcurrentDictionary<Guid, TUser> _connectedUsers;
         private readonly Socket _socket;
         private readonly LiteServerAcceptor _acceptor;
@@ -31,7 +31,7 @@ namespace LiteNetwork.Server
 
         public IEnumerable<TUser> ConnectedUsers => _connectedUsers.Values;
 
-        public LiteServer(LiteServerConfiguration configuration, ILitePacketProcessor packetProcessor = null, IServiceProvider serviceProvider = null)
+        public LiteServer(LiteServerConfiguration configuration, ILitePacketProcessor? packetProcessor = null, IServiceProvider? serviceProvider = null)
         {
             Configuration = configuration;
             _packetProcessor = packetProcessor ?? new LitePacketProcessor();
@@ -56,9 +56,9 @@ namespace LiteNetwork.Server
             _sender = new LiteServerSender();
         }
 
-        public TUser GetUser(Guid userId) => TryGetUser(userId, out TUser user) ? user : default;
+        public TUser? GetUser(Guid userId) => TryGetUser(userId, out TUser? user) ? user : default;
 
-        public bool TryGetUser(Guid userId, out TUser user) => _connectedUsers.TryGetValue(userId, out user);
+        public bool TryGetUser(Guid userId, out TUser? user) => _connectedUsers.TryGetValue(userId, out user);
 
         /// <inheritdoc />
         public void Start()
@@ -97,11 +97,6 @@ namespace LiteNetwork.Server
             _connectedUsers.Clear();
             _sender.Stop();
 
-            if (_socket is not null)
-            {
-                _socket.Dispose();
-            }
-
             IsRunning = false;
             OnAfterStop();
         }
@@ -133,7 +128,7 @@ namespace LiteNetwork.Server
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            _sender.Send(new LiteSendingMessage(connection.Socket, packet.Buffer));
+            _sender.Send(new LiteMessage(connection.Socket, packet.Buffer));
         }
 
         /// <inheritdoc />
@@ -153,7 +148,7 @@ namespace LiteNetwork.Server
 
             foreach (TUser connection in connections)
             {
-                _sender.Send(new LiteSendingMessage(connection.Socket, messageData));
+                _sender.Send(new LiteMessage(connection.Socket, messageData));
             }
         }
 
@@ -166,6 +161,9 @@ namespace LiteNetwork.Server
         public void Dispose()
         {
             Stop();
+            _socket.Dispose();
+            _sender.Dispose();
+            _acceptor.Dispose();
         }
 
         /// <summary>
@@ -193,20 +191,25 @@ namespace LiteNetwork.Server
         /// </summary>
         /// <param name="connection">Connection where the error occured.</param>
         /// <param name="exception">Error exception.</param>
-        protected virtual void OnError(ILiteConnection connection, Exception exception)
+        protected virtual void OnError(ILiteConnection? connection, Exception exception)
         {
             if (connection is null)
             {
-                _logger?.LogError(exception, $"An error has occured for user '{connection.Id}'.");
+                _logger?.LogError(exception, $"An error has occured.");
             }
             else
             {
-                _logger?.LogError(exception, $"An error has occured.");
+                _logger?.LogError(exception, $"An error has occured for user '{connection.Id}'.");
             }
         }
 
-        private void OnClientAccepted(object sender, SocketAsyncEventArgs e)
+        private void OnClientAccepted(object? sender, SocketAsyncEventArgs e)
         {
+            if (_serviceProvider is null)
+            {
+                throw new LiteNetworkException($"Unable to initialize a new client.");
+            }
+
             TUser user = ActivatorUtilities.CreateInstance<TUser>(_serviceProvider);
 
             if (!_connectedUsers.TryAdd(user.Id, user))
@@ -216,18 +219,23 @@ namespace LiteNetwork.Server
 
             _logger?.LogInformation($"New client connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
 
+            if (e.AcceptSocket is null)
+            {
+                throw new LiteNetworkException($"The accepted socket is null.");
+            }
+
             user.Socket = e.AcceptSocket;
             user.SendAction = packet => SendTo(user, packet);
             user.OnConnected();
             _receiver.StartReceiving(user, user.Socket);
         }
 
-        private void OnAcceptorError(object sender, Exception e)
+        private void OnAcceptorError(object? sender, Exception e)
         {
             OnError(null, e);
         }
 
-        private void OnReceiverError(object sender, Exception e)
+        private void OnReceiverError(object? sender, Exception e)
         {
             if (e is LiteReceiverException receiveException)
             {
@@ -239,12 +247,9 @@ namespace LiteNetwork.Server
             }
         }
 
-        private void OnDisconnected(object sender, ILiteConnection e)
+        private void OnDisconnected(object? sender, ILiteConnection e)
         {
-            if (e is not null)
-            {
-                DisconnectUser(e.Id);
-            }
+            DisconnectUser(e.Id);
         }
     }
 }

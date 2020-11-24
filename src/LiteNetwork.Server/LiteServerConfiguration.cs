@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets the server's listening host.
         /// </summary>
-        public string Host { get; }
+        public string Host { get; } = string.Empty;
 
         /// <summary>
         /// Gets the server's listening port.

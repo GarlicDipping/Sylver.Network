@@ -9,9 +9,9 @@ namespace LiteNetwork.Common.Internal
     /// <summary>
     /// Provides a mechanism to send data.
     /// </summary>
-    internal abstract class LiteSender
+    internal abstract class LiteSender : IDisposable
     {
-        private readonly BlockingCollection<LiteSendingMessage> _sendingCollection;
+        private readonly BlockingCollection<LiteMessage> _sendingCollection;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly CancellationToken _cancellationToken;
 
@@ -27,7 +27,7 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         protected LiteSender()
         {
-            _sendingCollection = new BlockingCollection<LiteSendingMessage>();
+            _sendingCollection = new BlockingCollection<LiteMessage>();
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
         }
@@ -57,7 +57,7 @@ namespace LiteNetwork.Common.Internal
         /// Sends a message.
         /// </summary>
         /// <param name="message">Lite message to be sent.</param>
-        public void Send(LiteSendingMessage message) => _sendingCollection.Add(message);
+        public void Send(LiteMessage message) => _sendingCollection.Add(message);
 
         /// <summary>
         /// Gets a <see cref="SocketAsyncEventArgs"/> for the sending operation.
@@ -80,12 +80,8 @@ namespace LiteNetwork.Common.Internal
             {
                 try
                 {
-                    LiteSendingMessage message = _sendingCollection.Take(_cancellationToken);
-
-                    if (message.Connection is not null && message.Data is not null)
-                    {
-                        SendMessage(message.Connection, message.Data);
-                    }
+                    LiteMessage message = _sendingCollection.Take(_cancellationToken);
+                    SendMessage(message.Connection, message.Data);
                 }
                 catch (OperationCanceledException)
                 {
@@ -95,21 +91,15 @@ namespace LiteNetwork.Common.Internal
         }
 
         /// <summary>
-        /// Sends the message data to the given <see cref="INetConnection"/>.
+        /// Sends the message data to the given connection Socket.
         /// </summary>
-        /// <param name="connection">Client connection.</param>
+        /// <param name="connectionSocket">Client connection.</param>
         /// <param name="data">Message data.</param>
         private void SendMessage(Socket connectionSocket, byte[] data)
         {
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
 
             socketAsyncEvent.SetBuffer(data, 0, data.Length);
-
-            if (connectionSocket is null)
-            {
-                ClearSocketEvent(socketAsyncEvent);
-                return;
-            }
 
             if (!connectionSocket.SendAsync(socketAsyncEvent))
             {
@@ -122,7 +112,7 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">Socket async event arguments.</param>
-        protected void OnSendCompleted(object sender, SocketAsyncEventArgs e)
+        protected void OnSendCompleted(object? sender, SocketAsyncEventArgs e)
         {
             ClearSocketEvent(e);
         }
@@ -147,7 +137,7 @@ namespace LiteNetwork.Common.Internal
         }
 
         /// <summary>
-        /// Dispose the <see cref="NetSender"/> resources.
+        /// Dispose the <see cref="LiteSender"/> resources.
         /// </summary>
         public void Dispose()
         {

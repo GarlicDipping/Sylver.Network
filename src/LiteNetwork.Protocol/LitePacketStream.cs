@@ -12,8 +12,8 @@ namespace LiteNetwork.Protocol
     /// </summary>
     public class LitePacketStream : MemoryStream, ILitePacketStream
     {
-        private readonly BinaryReader _reader;
-        private readonly BinaryWriter _writer;
+        private readonly BinaryReader _reader = null!;
+        private readonly BinaryWriter _writer = null!;
 
         /// <inheritdoc />
         public LitePacketMode Mode { get; }
@@ -125,19 +125,16 @@ namespace LiteNetwork.Protocol
                 throw new ArgumentException($"Amount is '{amount}' and must be grather than 0.", nameof(amount));
             }
 
-            Type type = typeof(T);
+            if (typeof(T) == typeof(byte))
+            {
+                return _reader.ReadBytes(amount) as T[] ?? throw new IOException("An error occurred while reading a packet stream.");
+            }
+
             var array = new T[amount];
 
-            if (type == typeof(byte))
+            for (var i = 0; i < amount; i++)
             {
-                array = _reader.ReadBytes(amount) as T[];
-            }
-            else
-            {
-                for (var i = 0; i < amount; i++)
-                {
-                    array[i] = Read<T>();
-                }
+                array[i] = Read<T>();
             }
 
             return array;
@@ -190,6 +187,11 @@ namespace LiteNetwork.Protocol
                 throw new InvalidOperationException($"The current packet stream is in read-only mode.");
             }
 
+            if (value is null)
+            {
+                throw new ArgumentNullException("Cannot write a null value into the packet stream.");
+            }
+
             if (typeof(T).IsPrimitive || typeof(T) == typeof(string))
             {
                 WritePrimitive<T>(value);
@@ -222,7 +224,7 @@ namespace LiteNetwork.Protocol
                 TypeCode.Int64 => _reader.ReadInt64(),
                 TypeCode.UInt64 => _reader.ReadUInt64(),
                 TypeCode.String => InternalReadString(),
-                _ => default
+                _ => throw new NotImplementedException(),
             };
 
             return (T)primitiveValue;

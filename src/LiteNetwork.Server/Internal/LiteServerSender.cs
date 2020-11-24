@@ -9,7 +9,7 @@ namespace LiteNetwork.Server.Internal
         private readonly ObjectPool<SocketAsyncEventArgs> _writePool;
 
         /// <summary>
-        /// Creates a new <see cref="NetServerSender"/> instance.
+        /// Creates a new <see cref="LiteServerSender"/> instance.
         /// </summary>
         public LiteServerSender()
         {
@@ -18,8 +18,8 @@ namespace LiteNetwork.Server.Internal
 
         protected override void ClearSocketEvent(SocketAsyncEventArgs socketAsyncEvent)
         {
-            socketAsyncEvent.Completed -= OnSendCompleted;
             socketAsyncEvent.SetBuffer(null, 0, 0);
+            socketAsyncEvent.Completed -= OnSendCompleted;
 
             _writePool.Return(socketAsyncEvent);
         }
@@ -27,7 +27,6 @@ namespace LiteNetwork.Server.Internal
         protected override SocketAsyncEventArgs GetSocketEvent()
         {
             SocketAsyncEventArgs socketAsyncEvent = _writePool.Get();
-
             socketAsyncEvent.Completed += OnSendCompleted;
 
             return socketAsyncEvent;

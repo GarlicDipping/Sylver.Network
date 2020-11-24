@@ -13,9 +13,9 @@ namespace LiteNetwork.Server.Abstractions
 
         IEnumerable<TUser> ConnectedUsers { get; }
 
-        TUser GetUser(Guid userId);
+        TUser? GetUser(Guid userId);
 
-        bool TryGetUser(Guid userId, out TUser user);
+        bool TryGetUser(Guid userId, out TUser? user);
 
         void Start();
 
