@@ -8,7 +8,7 @@ namespace LiteNetwork.Server
 {
     public class LiteServerUser : ILiteConnection
     {
-        private bool _disposed = false;
+        private bool _disposed;
 
         /// <inheritdoc />
         public Guid Id { get; } = Guid.NewGuid();
