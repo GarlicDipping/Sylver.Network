@@ -162,6 +162,8 @@ namespace LiteNetwork.Server
         {
             Stop();
             _socket.Dispose();
+            _sender.Dispose();
+            _acceptor.Dispose();
         }
 
         /// <summary>

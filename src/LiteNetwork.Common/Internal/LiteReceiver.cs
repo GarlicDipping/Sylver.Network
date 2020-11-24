@@ -169,7 +169,7 @@ namespace LiteNetwork.Common.Internal
         /// <summary>
         /// Process a received message.
         /// </summary>
-        /// <param name="client">Current client.</param>
+        /// <param name="connectionToken">Current connection token.</param>
         /// <param name="messageBuffer">Current message data buffer.</param>
         [ExcludeFromCodeCoverage]
         protected virtual void ProcessReceivedMessage(ILiteConnectionToken connectionToken, byte[] messageBuffer)

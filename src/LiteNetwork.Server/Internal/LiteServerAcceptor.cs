@@ -7,7 +7,7 @@ namespace LiteNetwork.Server.Internal
     /// <summary>
     /// Accepts the clients into the server.
     /// </summary>
-    internal class LiteServerAcceptor
+    internal class LiteServerAcceptor : IDisposable
     {
         private readonly Socket _listeningSocket;
         private readonly SocketAsyncEventArgs _socketEvent;
@@ -98,6 +98,12 @@ namespace LiteNetwork.Server.Internal
             {
                 OnError?.Invoke(this, ex);
             }
+        }
+
+        public void Dispose()
+        {
+            _socketEvent.Dispose();
+            _listeningSocket.Dispose();
         }
     }
 }
