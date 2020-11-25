@@ -18,7 +18,7 @@ namespace LiteNetwork.Server
     {
         private readonly ILogger<LiteServer<TUser>>? _logger;
         private readonly ILitePacketProcessor _packetProcessor;
-        private readonly IServiceProvider? _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ConcurrentDictionary<Guid, TUser> _connectedUsers;
         private readonly Socket _socket;
         private readonly LiteServerAcceptor _acceptor;
@@ -31,7 +31,7 @@ namespace LiteNetwork.Server
 
         public IEnumerable<TUser> ConnectedUsers => _connectedUsers.Values;
 
-        public LiteServer(LiteServerConfiguration configuration, ILitePacketProcessor? packetProcessor = null, IServiceProvider? serviceProvider = null)
+        public LiteServer(LiteServerConfiguration configuration, ILitePacketProcessor? packetProcessor = null, IServiceProvider serviceProvider = null!)
         {
             Configuration = configuration;
             _packetProcessor = packetProcessor ?? new LitePacketProcessor();
@@ -205,19 +205,12 @@ namespace LiteNetwork.Server
 
         private void OnClientAccepted(object? sender, SocketAsyncEventArgs e)
         {
-            if (_serviceProvider is null)
-            {
-                throw new LiteNetworkException($"Unable to initialize a new client.");
-            }
-
             TUser user = ActivatorUtilities.CreateInstance<TUser>(_serviceProvider);
 
             if (!_connectedUsers.TryAdd(user.Id, user))
             {
                 throw new LiteNetworkException($"Failed to add user with id: '{user.Id}'. An user with same id already exists.");
             }
-
-            _logger?.LogInformation($"New client connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
 
             if (e.AcceptSocket is null)
             {
@@ -226,6 +219,8 @@ namespace LiteNetwork.Server
 
             user.Socket = e.AcceptSocket;
             user.SendAction = packet => SendTo(user, packet);
+
+            _logger?.LogInformation($"New client connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
             user.OnConnected();
             _receiver.StartReceiving(user, user.Socket);
         }
