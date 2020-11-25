@@ -12,7 +12,7 @@ namespace LiteNetwork.Samples.Hosting.Server
             Console.Title = "LiteNetwork Hosting Sample";
 
             var host = new HostBuilder()
-                .UseLiteServer<ServerUser>(options =>
+                .UseLiteServer<CustomServer, ServerUser>((host, options) =>
                 {
                     options.Host = "127.0.0.1";
                     options.Port = 4444;
