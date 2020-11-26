@@ -82,11 +82,6 @@ namespace LiteNetwork.Server
         /// <inheritdoc />
         public void Stop()
         {
-            if (!IsRunning)
-            {
-                throw new InvalidOperationException("Server is not running.");
-            }
-
             OnBeforeStop();
 
             foreach (var connectedUser in _connectedUsers)
