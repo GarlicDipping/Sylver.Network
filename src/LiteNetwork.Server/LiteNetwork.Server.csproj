@@ -4,15 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Version>1.0.0-rc.1</Version>
-    <Authors>Filipe GP</Authors>
+    <Authors>Filipe GOMES PEIXOTO</Authors>
     <Product>LiteNetwork</Product>
-    <Copyright>Filipe GP © 2019-2020</Copyright>
-    <Company>Filipe GP</Company>
+    <Copyright>Filipe GOMES PEIXOTO © 2019-2020</Copyright>
+    <Company>Filipe GOMES PEIXOTO</Company>
     <PackageProjectUrl>https://github.com/Eastrall/LiteNetwork</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/Eastrall/LiteNetwork</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <Nullable>enable</Nullable>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>socket,server,tcp,network,networking,lite,packet</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,15 +26,45 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LiteNetwork.Common\LiteNetwork.Common.csproj" />
-    <ProjectReference Include="..\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="Resources\icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\LiteNetwork.Common\LiteNetwork.Common.csproj" />
+    <ProjectReference Include="..\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj" />
+  </ItemGroup>
+  
+  <!-- Release configuration -->
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <ProjectReference Include="..\LiteNetwork.Common\LiteNetwork.Common.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <Target Condition="'$(Configuration)' == 'Release'" Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <ItemGroup>
+      <!-- Filter out unnecessary files -->
+      <_ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
+    </ItemGroup>
+
+    <!-- Print batches for debug purposes -->
+    <Message Text="Batch for .nupkg: ReferenceCopyLocalPaths = @(_ReferenceCopyLocalPaths), ReferenceCopyLocalPaths.DestinationSubDirectory = %(_ReferenceCopyLocalPaths.DestinationSubDirectory) Filename = %(_ReferenceCopyLocalPaths.Filename) Extension = %(_ReferenceCopyLocalPaths.Extension)" Importance="High" />
+
+    <ItemGroup>
+      <!-- Add file to package with consideration of sub folder. If empty, the root folder is chosen. -->
+      <BuildOutputInPackage Include="@(_ReferenceCopyLocalPaths)" TargetPath="%(_ReferenceCopyLocalPaths.DestinationSubDirectory)" />
+    </ItemGroup>
+  </Target>
 
 </Project>
