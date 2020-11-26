@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
-    <Version>0.1.0</Version>
+    <Version>1.0.0-rc.1</Version>
     <Authors>Filipe GP</Authors>
     <Product>LiteNetwork</Product>
     <Copyright>Filipe GP © 2019-2020</Copyright>
