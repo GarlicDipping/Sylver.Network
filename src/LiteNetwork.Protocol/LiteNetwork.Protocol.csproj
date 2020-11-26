@@ -5,6 +5,7 @@
     <LangVersion>9.0</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Nullable>enable</Nullable>
+    <Configurations>Debug;Release;Package</Configurations>
   </PropertyGroup>
 
 </Project>

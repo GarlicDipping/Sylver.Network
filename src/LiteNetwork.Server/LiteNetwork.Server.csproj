@@ -15,6 +15,7 @@
     <Nullable>enable</Nullable>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>socket,server,tcp,network,networking,lite,packet</PackageTags>
+    <Configurations>Debug;Release;Package</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,23 +37,27 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'">
     <ProjectReference Include="..\LiteNetwork.Common\LiteNetwork.Common.csproj" />
     <ProjectReference Include="..\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj" />
   </ItemGroup>
   
-  <!-- Release configuration -->
+  <!-- Package configuration -->
 
-  <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <ProjectReference Include="..\LiteNetwork.Common\LiteNetwork.Common.csproj" PrivateAssets="all" />
-    <ProjectReference Include="..\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj" PrivateAssets="all" />
+  <ItemGroup Condition="'$(Configuration)'=='Package'">
+    <ProjectReference Include="..\LiteNetwork.Common\LiteNetwork.Common.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)'=='Package'">
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
-  <Target Condition="'$(Configuration)' == 'Release'" Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+  <Target Condition="'$(Configuration)' == 'Package'" Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
     <ItemGroup>
       <!-- Filter out unnecessary files -->
       <_ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
