@@ -1,9 +1,14 @@
 # LiteNetwork
 
-[![Build Status](https://dev.azure.com/eastrall/LiteNetwork/_apis/build/status/Eastrall.LiteNetwork?branchName=main)](https://dev.azure.com/eastrall/LiteNetwork/_build/latest?definitionId=4&branchName=main)
-
 `LiteNetwork` is a simple and fast networking library built with C# and compatible with .NET Standard 2. Its main goal is to simply the creation of basic socket servers over the TCP/IP protocol.
 It has been initialy developed for game development networking, but can also be used for other purposes.
+
+## Status
+
+| Project            | Build Status | NuGet |
+|--------------------|--------------|-------|
+| `LiteNetwork.Server` | [![Build Status](https://dev.azure.com/eastrall/LiteNetwork/_apis/build/status/Eastrall.LiteNetwork?branchName=main)](https://dev.azure.com/eastrall/LiteNetwork/_build/latest?definitionId=4&branchName=main) | [![NuGet](https://img.shields.io/nuget/v/LiteNetwork.Server.svg)](https://www.nuget.org/packages/LiteNetwork.Server/) |
+
 
 ## How to install
 
