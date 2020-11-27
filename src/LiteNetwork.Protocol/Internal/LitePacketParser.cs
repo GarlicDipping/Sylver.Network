@@ -36,53 +36,14 @@ namespace LiteNetwork.Protocol.Internal
 
             while (token.DataStartOffset < bytesTransfered)
             {
-                int headerSize = PacketProcessor.HeaderSize;
-
-                if (token.ReceivedHeaderBytesCount < headerSize)
+                if (!token.IsHeaderComplete)
                 {
-                    if (token.HeaderData == null)
-                    {
-                        token.HeaderData = new byte[headerSize];
-                    }
-
-                    int bufferRemainingBytes = bytesTransfered - token.DataStartOffset;
-                    int headerRemainingBytes = headerSize - token.ReceivedHeaderBytesCount;
-                    int bytesToRead = Math.Min(bufferRemainingBytes, headerRemainingBytes);
-
-                    Buffer.BlockCopy(buffer, token.DataStartOffset, token.HeaderData, token.ReceivedHeaderBytesCount, bytesToRead);
-
-                    token.ReceivedHeaderBytesCount += bytesToRead;
-                    token.DataStartOffset += bytesToRead;
+                    PacketProcessor.ParseHeader(token, buffer, bytesTransfered);
                 }
 
-                if (token.ReceivedHeaderBytesCount == headerSize && token.HeaderData != null)
+                if (token.IsHeaderComplete && token.HeaderData != null)
                 {
-                    if (!token.MessageSize.HasValue)
-                    {
-                        token.MessageSize = PacketProcessor.GetMessageLength(token.HeaderData);
-                    }
-
-                    if (token.MessageSize.Value < 0)
-                    {
-                        throw new InvalidOperationException("Message size cannot be smaller than zero.");
-                    }
-
-                    if (token.MessageData == null)
-                    {
-                        token.MessageData = new byte[token.MessageSize.Value];
-                    }
-
-                    if (token.ReceivedMessageBytesCount < token.MessageSize.Value)
-                    {
-                        int bufferRemainingBytes = bytesTransfered - token.DataStartOffset;
-                        int messageRemainingBytes = token.MessageSize.Value - token.ReceivedMessageBytesCount;
-                        int bytesToRead = Math.Min(bufferRemainingBytes, messageRemainingBytes);
-
-                        Buffer.BlockCopy(buffer, token.DataStartOffset, token.MessageData, token.ReceivedMessageBytesCount, bytesToRead);
-
-                        token.ReceivedMessageBytesCount += bytesToRead;
-                        token.DataStartOffset += bytesToRead;
-                    }
+                    PacketProcessor.ParseContent(token, buffer, bytesTransfered);
                 }
 
                 if (token.IsMessageComplete)

@@ -28,5 +28,9 @@
         /// <param name="buffer">Input buffer</param>
         /// <returns>New packet</returns>
         ILitePacketStream CreatePacket(byte[] buffer);
+
+        void ParseHeader(LiteDataToken token, byte[] buffer, int bytesTransfered);
+
+        void ParseContent(LiteDataToken token, byte[] buffer, int bytesTransfered);
     }
 }
