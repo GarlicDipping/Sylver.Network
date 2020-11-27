@@ -41,7 +41,7 @@ namespace LiteNetwork.Protocol.Internal
                     PacketProcessor.ParseHeader(token, buffer, bytesTransfered);
                 }
 
-                if (token.IsHeaderComplete && token.HeaderData != null)
+                if (token.IsHeaderComplete && token.HeaderData is not null)
                 {
                     PacketProcessor.ParseContent(token, buffer, bytesTransfered);
                 }
