@@ -1,5 +1,8 @@
 ﻿namespace LiteNetwork.Protocol
 {
+    /// <summary>
+    /// Provides a data structure that defines a lite packet data.
+    /// </summary>
     public class LiteDataToken
     {
         /// <summary>
@@ -11,6 +14,11 @@
         /// Gets or sets the number of bytes received for the the message header.
         /// </summary>
         public int ReceivedHeaderBytesCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets a boolean value that indicates if the header is complete.
+        /// </summary>
+        public bool IsHeaderComplete { get; set; }
 
         /// <summary>
         /// Gets or sets the full message size.

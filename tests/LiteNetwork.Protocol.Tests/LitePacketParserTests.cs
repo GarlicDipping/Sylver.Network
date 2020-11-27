@@ -103,5 +103,6 @@ namespace LiteNetwork.Protocol.Tests
 
             Assert.Throws<InvalidOperationException>(() => _packetParser.ParseIncomingData(token, _invalidBuffer, 32));
         }
+
     }
 }

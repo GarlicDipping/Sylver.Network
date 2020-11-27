@@ -11,5 +11,11 @@
   <ItemGroup>
     <ProjectReference Include="..\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj" />
   </ItemGroup>
+  
+  <!-- Package configuration -->
 
+  <PropertyGroup Condition="'$(Configuration)'=='Package'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  
 </Project>
