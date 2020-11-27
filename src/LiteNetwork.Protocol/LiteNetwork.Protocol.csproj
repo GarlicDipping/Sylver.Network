@@ -7,5 +7,10 @@
     <Nullable>enable</Nullable>
     <Configurations>Debug;Release;Package</Configurations>
   </PropertyGroup>
+  
+  <!-- Package configuration -->
 
+  <PropertyGroup Condition="'$(Configuration)'=='Package'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 </Project>

@@ -29,8 +29,21 @@
         /// <returns>New packet</returns>
         ILitePacketStream CreatePacket(byte[] buffer);
 
-        void ParseHeader(LiteDataToken token, byte[] buffer, int bytesTransfered);
+        /// <summary>
+        /// Parses the packet header.
+        /// </summary>
+        /// <param name="token">Current data token.</param>
+        /// <param name="buffer">Current buffer from socket receive operation.</param>
+        /// <param name="bytesTransfered">Number of bytes transfered by the socket.</param>
+        /// <returns>True if the header is complete; false otherwise.</returns>
+        bool ParseHeader(LiteDataToken token, byte[] buffer, int bytesTransfered);
 
+        /// <summary>
+        /// Parses the packet content based on the given data token information.
+        /// </summary>
+        /// <param name="token">Current data token.</param>
+        /// <param name="buffer">Current buffer from socket receive operation.</param>
+        /// <param name="bytesTransfered">Number of bytes transfered by the socket.</param>
         void ParseContent(LiteDataToken token, byte[] buffer, int bytesTransfered);
     }
 }

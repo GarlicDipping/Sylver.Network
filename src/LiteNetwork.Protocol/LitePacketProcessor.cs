@@ -33,7 +33,7 @@ namespace LiteNetwork.Protocol
         public virtual ILitePacketStream CreatePacket(byte[] buffer) => new LitePacket(buffer);
 
         /// <inheritdoc />
-        public virtual void ParseHeader(LiteDataToken token, byte[] buffer, int bytesTransfered)
+        public virtual bool ParseHeader(LiteDataToken token, byte[] buffer, int bytesTransfered)
         {
             if (token.HeaderData is null)
             {
@@ -41,14 +41,19 @@ namespace LiteNetwork.Protocol
             }
 
             int bufferRemainingBytes = bytesTransfered - token.DataStartOffset;
-            int headerRemainingBytes = HeaderSize - token.ReceivedHeaderBytesCount;
-            int bytesToRead = Math.Min(bufferRemainingBytes, headerRemainingBytes);
 
-            Buffer.BlockCopy(buffer, token.DataStartOffset, token.HeaderData, token.ReceivedHeaderBytesCount, bytesToRead);
+            if (bufferRemainingBytes > 0)
+            {
+                int headerRemainingBytes = HeaderSize - token.ReceivedHeaderBytesCount;
+                int bytesToRead = Math.Min(bufferRemainingBytes, headerRemainingBytes);
 
-            token.ReceivedHeaderBytesCount += bytesToRead;
-            token.DataStartOffset += bytesToRead;
-            token.IsHeaderComplete = token.ReceivedHeaderBytesCount == HeaderSize;
+                Buffer.BlockCopy(buffer, token.DataStartOffset, token.HeaderData, token.ReceivedHeaderBytesCount, bytesToRead);
+                
+                token.ReceivedHeaderBytesCount += bytesToRead;
+                token.DataStartOffset += bytesToRead;
+            }
+            
+            return token.ReceivedHeaderBytesCount == HeaderSize;
         }
 
         /// <inheritdoc />
