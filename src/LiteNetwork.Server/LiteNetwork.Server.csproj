@@ -16,6 +16,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>socket,server,tcp,network,networking,lite,packet</PackageTags>
     <Configurations>Debug;Release;Package</Configurations>
+    <Description>LiteNetwork is a simple and fast networking library built with C# and compatible with .NET Standard 2. Its main goal is to simply the creation of basic socket servers over the TCP/IP protocol. It has been initialy developed for game development networking, but can also be used for other purposes.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,7 +42,7 @@
     <ProjectReference Include="..\LiteNetwork.Common\LiteNetwork.Common.csproj" />
     <ProjectReference Include="..\LiteNetwork.Protocol\LiteNetwork.Protocol.csproj" />
   </ItemGroup>
-  
+
   <!-- Package configuration -->
 
   <PropertyGroup Condition="'$(Configuration)'=='Package'">
@@ -68,7 +69,7 @@
     </ItemGroup>
 
     <!-- Print batches for debug purposes -->
-    <Message Text="Batch for .nupkg: ReferenceCopyLocalPaths = @(_ReferenceCopyLocalPaths), ReferenceCopyLocalPaths.DestinationSubDirectory = %(_ReferenceCopyLocalPaths.DestinationSubDirectory) Filename = %(_ReferenceCopyLocalPaths.Filename) Extension = %(_ReferenceCopyLocalPaths.Extension)" Importance="High" />
+    <Message Text="Batch for .nupkg: ReferenceCopyLocalPaths = @(_ReferenceCopyLocalPaths), ReferenceCopyLocalPaths.DestinationSubDirectory = %(_ReferenceCopyLocalPaths.DestinationSubDirectory) Filename = %(_ReferenceCopyLocalPaths.Filename) Extension = %(_ReferenceCopyLocalPaths.Extension)" Importance="High" Condition="'@(_ReferenceCopyLocalPaths)' != ''" />
 
     <ItemGroup>
       <!-- Add file to package with consideration of sub folder. If empty, the root folder is chosen. -->
