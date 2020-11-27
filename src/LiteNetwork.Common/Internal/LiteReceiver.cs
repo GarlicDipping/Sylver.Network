@@ -72,7 +72,6 @@ namespace LiteNetwork.Common.Internal
                 {
                     if (socketAsyncEvent.SocketError == SocketError.Success)
                     {
-
                         if (socketAsyncEvent.Buffer is null)
                         {
                             throw new LiteNetworkException("A network error occurred: socket buffer is null.");
@@ -179,12 +178,12 @@ namespace LiteNetwork.Common.Internal
         [ExcludeFromCodeCoverage]
         protected virtual void ProcessReceivedMessage(ILiteConnectionToken connectionToken, byte[] messageBuffer)
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 try
                 {
                     using ILitePacketStream packetStream = _packetProcessor.CreatePacket(messageBuffer);
-                    connectionToken.Connection.HandleMessageAsync(packetStream);
+                    await connectionToken.Connection.HandleMessageAsync(packetStream);
                 }
                 catch (Exception e)
                 {

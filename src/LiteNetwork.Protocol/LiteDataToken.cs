@@ -50,6 +50,7 @@
         /// </summary>
         public void Reset()
         {
+            IsHeaderComplete = false;
             ReceivedHeaderBytesCount = 0;
             ReceivedMessageBytesCount = 0;
             HeaderData = null;

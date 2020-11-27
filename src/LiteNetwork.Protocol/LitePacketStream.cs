@@ -27,11 +27,17 @@ namespace LiteNetwork.Protocol
         /// <summary>
         /// Gets the encoding used to encode strings when writing on the packet stream.
         /// </summary>
+        /// <remarks>
+        /// Default encoding is UTF-8.
+        /// </remarks>
         protected virtual Encoding WriteEncoding => Encoding.UTF8;
 
         /// <summary>
         /// Gets the encoding used to decode strings when reading from the packet stream.
         /// </summary>
+        /// <remarks>
+        /// Default encoding is UTF-8.
+        /// </remarks>
         protected virtual Encoding ReadEncoding => Encoding.UTF8;
 
         /// <summary>
