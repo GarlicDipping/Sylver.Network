@@ -9,14 +9,8 @@ namespace LiteNetwork.Protocol
     /// </summary>
     public class LitePacketProcessor : ILitePacketProcessor
     {
-        private int _headerSize = sizeof(int);
-
         /// <inheritdoc />
-        public virtual int HeaderSize
-        {
-            get => _headerSize;
-            protected set => _headerSize = value;
-        }
+        public virtual int HeaderSize { get; protected set; } = sizeof(int);
 
         /// <inheritdoc />
         public virtual bool IncludeHeader { get; protected set; }
