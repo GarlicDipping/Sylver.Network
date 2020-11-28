@@ -37,6 +37,11 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         public void Start()
         {
+            if (IsRunning)
+            {
+                throw new InvalidOperationException("Sender is already running.");
+            }
+
             Task.Factory.StartNew(ProcessSendingQueue,
                 _cancellationToken,
                 TaskCreationOptions.LongRunning,
@@ -49,6 +54,10 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         public void Stop()
         {
+            if (IsRunning)
+            {
+                throw new InvalidOperationException("Sender is not running.");
+            }
             _cancellationTokenSource.Cancel(false);
             IsRunning = false;
         }
