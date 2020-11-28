@@ -9,10 +9,7 @@ namespace LiteNetwork.Protocol.Internal
     /// </summary>
     internal sealed class LitePacketParser
     {
-        /// <summary>
-        /// Gets or sets the packet processor.
-        /// </summary>
-        public ILitePacketProcessor PacketProcessor { get; set; }
+        private readonly ILitePacketProcessor _packetProcessor;
 
         /// <summary>
         /// Creates a new <see cref="LitePacketParser"/> instance.
@@ -20,7 +17,7 @@ namespace LiteNetwork.Protocol.Internal
         /// <param name="packetProcessor">Packet processor used to parse the incoming data.</param>
         public LitePacketParser(ILitePacketProcessor packetProcessor)
         {
-            PacketProcessor = packetProcessor;
+            _packetProcessor = packetProcessor;
         }
 
         /// <summary>
@@ -38,12 +35,12 @@ namespace LiteNetwork.Protocol.Internal
             {
                 if (!token.IsHeaderComplete)
                 {
-                    token.IsHeaderComplete = PacketProcessor.ParseHeader(token, buffer, bytesTransfered);
+                    token.IsHeaderComplete = _packetProcessor.ParseHeader(token, buffer, bytesTransfered);
                 }
 
                 if (token.IsHeaderComplete && token.HeaderData is not null)
                 {
-                    PacketProcessor.ParseContent(token, buffer, bytesTransfered);
+                    _packetProcessor.ParseContent(token, buffer, bytesTransfered);
                 }
 
                 if (token.IsMessageComplete)
@@ -70,13 +67,13 @@ namespace LiteNetwork.Protocol.Internal
                 throw new ArgumentNullException("An error occurred: Message size cannot be null.");
             }
 
-            var bufferSize = PacketProcessor.IncludeHeader ? PacketProcessor.HeaderSize + token.MessageSize.Value : token.MessageSize.Value;
+            var bufferSize = _packetProcessor.IncludeHeader ? _packetProcessor.HeaderSize + token.MessageSize.Value : token.MessageSize.Value;
             var buffer = new byte[bufferSize];
 
-            if (PacketProcessor.IncludeHeader)
+            if (_packetProcessor.IncludeHeader)
             {
-                Array.Copy(token.HeaderData, 0, buffer, 0, PacketProcessor.HeaderSize);
-                Array.Copy(token.MessageData, 0, buffer, PacketProcessor.HeaderSize, token.MessageSize.Value);
+                Array.Copy(token.HeaderData, 0, buffer, 0, _packetProcessor.HeaderSize);
+                Array.Copy(token.MessageData, 0, buffer, _packetProcessor.HeaderSize, token.MessageSize.Value);
             }
             else
             {
