@@ -59,11 +59,6 @@ namespace LiteNetwork.Protocol
         /// <inheritdoc />
         public virtual void ParseContent(LiteDataToken token, byte[] buffer, int bytesTransfered)
         {
-            if (token is null)
-            {
-                throw new ArgumentNullException(nameof(token));
-            }
-
             if (token.HeaderData is null)
             {
                 throw new ArgumentException($"Header data is null.");
