@@ -96,7 +96,7 @@ namespace LiteNetwork.Server
         /// <inheritdoc />
         public void Stop()
         {
-            if (IsRunning)
+            if (!IsRunning)
             {
                 throw new InvalidOperationException("Server is not running.");
             }

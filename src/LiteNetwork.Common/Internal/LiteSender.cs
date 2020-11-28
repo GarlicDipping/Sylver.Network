@@ -54,7 +54,7 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         public void Stop()
         {
-            if (IsRunning)
+            if (!IsRunning)
             {
                 throw new InvalidOperationException("Sender is not running.");
             }
@@ -136,7 +136,10 @@ namespace LiteNetwork.Common.Internal
             {
                 if (disposing)
                 {
-                    Stop();
+                    if (IsRunning)
+                    {
+                        Stop();
+                    }
                     _sendingCollection.Dispose();
                     _cancellationTokenSource.Dispose();
                 }
