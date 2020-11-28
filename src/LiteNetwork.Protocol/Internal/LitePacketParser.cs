@@ -12,7 +12,7 @@ namespace LiteNetwork.Protocol.Internal
         private readonly ILitePacketProcessor _packetProcessor;
 
         /// <summary>
-        /// Creates a new <see cref="LitePacketParser"/> instance.
+        /// Creates a new <see cref="LitePacketParser"/> instance with an <see cref="ILitePacketProcessor"/>.
         /// </summary>
         /// <param name="packetProcessor">Packet processor used to parse the incoming data.</param>
         public LitePacketParser(ILitePacketProcessor packetProcessor)

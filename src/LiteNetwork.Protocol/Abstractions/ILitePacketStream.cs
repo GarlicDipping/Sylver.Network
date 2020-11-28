@@ -28,7 +28,6 @@ namespace LiteNetwork.Protocol.Abstractions
         /// <summary>
         /// Gets the packet stream buffer.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>")]
         byte[] Buffer { get; }
 
         /// <summary>
