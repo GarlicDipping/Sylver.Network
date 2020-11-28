@@ -19,7 +19,7 @@ namespace LiteNetwork.Common.Exceptions
         public SocketError SocketError { get; }
 
         /// <summary>
-        /// Creates a new <see cref="LiteReceiverException"/> instance.
+        /// Creates a new <see cref="LiteReceiverException"/> instance with a default receiver message error.
         /// </summary>
         /// <param name="connection">Connection that thrown the exception.</param>
         /// <param name="socketError">Socket error.</param>

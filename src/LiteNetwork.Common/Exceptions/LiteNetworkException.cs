@@ -8,7 +8,7 @@ namespace LiteNetwork.Common.Exceptions
     public class LiteNetworkException : Exception
     {
         /// <summary>
-        /// Creates a new <see cref="LiteNetworkException"/> instance.
+        /// Creates a new <see cref="LiteNetworkException"/> instance with a specified error message.
         /// </summary>
         /// <param name="message">Exception message.</param>
         public LiteNetworkException(string message)
@@ -17,7 +17,8 @@ namespace LiteNetwork.Common.Exceptions
         }
 
         /// <summary>
-        /// Creates a new <see cref="LiteNetworkException"/> instance.
+        /// Creates a new <see cref="LiteNetworkException"/> instance with a specified error message
+        /// and reference to the inner exception.
         /// </summary>
         /// <param name="message">Exception message.</param>
         /// <param name="innerException">Inner exception.</param>

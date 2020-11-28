@@ -18,11 +18,18 @@ namespace LiteNetwork.Common.Internal
         private readonly ILitePacketProcessor _packetProcessor;
         private readonly LitePacketParser _packetParser;
 
+        /// <summary>
+        /// The event used when a client has been disconnected.
+        /// </summary>
         public event EventHandler<ILiteConnection>? Disconnected;
+
+        /// <summary>
+        /// The event used when an error has been occurred.
+        /// </summary>
         public event EventHandler<Exception>? Error;
 
         /// <summary>
-        /// Creates a new <see cref="LiteReceiver"/> instance.
+        /// Creates a new <see cref="LiteReceiver"/> instance with a specified <see cref="ILitePacketProcessor"/>.
         /// </summary>
         /// <param name="packetProcessor">Packet processor to process incoming data and convert it into an exploitable packet stream.</param>
         protected LiteReceiver(ILitePacketProcessor packetProcessor)
@@ -48,7 +55,7 @@ namespace LiteNetwork.Common.Internal
         /// <summary>
         /// Receive data from a client.
         /// </summary>
-        /// <param name="userConnectionToken">user connection token.</param>
+        /// <param name="userConnectionToken">User connection token.</param>
         /// <param name="socketAsyncEvent">Socket async event arguments.</param>
         private void ReceiveData(ILiteConnectionToken userConnectionToken, SocketAsyncEventArgs socketAsyncEvent)
         {
@@ -114,7 +121,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="sender">Sender.</param>
         /// <param name="e">Socket async event arguments.</param>
         [ExcludeFromCodeCoverage]
-        protected internal void OnCompleted(object? sender, SocketAsyncEventArgs e)
+        protected void OnCompleted(object? sender, SocketAsyncEventArgs e)
         {
             try
             {
@@ -156,7 +163,7 @@ namespace LiteNetwork.Common.Internal
         protected abstract void ClearSocketEvent(SocketAsyncEventArgs socketAsyncEvent);
 
         /// <summary>
-        /// Client has been disconnected.
+        /// Called when a client has been disconnected.
         /// </summary>
         /// <param name="client">Disconnected client.</param>
         private void OnDisconnected(ILiteConnection client) => Disconnected?.Invoke(this, client);
