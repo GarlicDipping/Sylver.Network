@@ -81,10 +81,7 @@ namespace LiteNetwork.Common.Internal
 
                         if (messages.Any())
                         {
-                            foreach (var message in messages)
-                            {
-                                ProcessReceivedMessage(clientToken, message);
-                            }
+                            ProcessReceivedMessage(clientToken, messages);
                         }
 
                         if (clientToken.DataToken.DataStartOffset >= socketAsyncEvent.BytesTransferred)
@@ -174,20 +171,23 @@ namespace LiteNetwork.Common.Internal
         /// Process a received message.
         /// </summary>
         /// <param name="connectionToken">Current connection token.</param>
-        /// <param name="messageBuffer">Current message data buffer.</param>
+        /// <param name="messages">Collection of message data buffers.</param>
         [ExcludeFromCodeCoverage]
-        protected virtual void ProcessReceivedMessage(ILiteConnectionToken connectionToken, byte[] messageBuffer)
+        protected virtual void ProcessReceivedMessage(ILiteConnectionToken connectionToken, IEnumerable<byte[]> messages)
         {
             Task.Run(async () =>
             {
-                try
+                foreach (var messageBuffer in messages)
                 {
-                    using ILitePacketStream packetStream = _packetProcessor.CreatePacket(messageBuffer);
-                    await connectionToken.Connection.HandleMessageAsync(packetStream);
-                }
-                catch (Exception e)
-                {
-                    OnError(e);
+                    try
+                    {
+                        using ILitePacketStream packetStream = _packetProcessor.CreatePacket(messageBuffer);
+                        await connectionToken.Connection.HandleMessageAsync(packetStream);
+                    }
+                    catch (Exception e)
+                    {
+                        OnError(e);
+                    }
                 }
             });
         }
