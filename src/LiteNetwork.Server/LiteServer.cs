@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
 
 namespace LiteNetwork.Server
@@ -61,7 +62,7 @@ namespace LiteNetwork.Server
         public bool TryGetUser(Guid userId, out TUser? user) => _connectedUsers.TryGetValue(userId, out user);
 
         /// <inheritdoc />
-        public void Start()
+        public async void Start()
         {
             if (IsRunning)
             {
@@ -69,8 +70,9 @@ namespace LiteNetwork.Server
             }
 
             OnBeforeStart();
-            
-            _socket.Bind(LiteNetworkHelpers.CreateIpEndPoint(Configuration.Host, Configuration.Port));
+
+            IPEndPoint localEndPoint = await LiteNetworkHelpers.CreateIpEndPointAsync(Configuration.Host, Configuration.Port).ConfigureAwait(false);
+            _socket.Bind(localEndPoint);
             _socket.Listen(Configuration.Backlog);
             _sender.Start();
             _acceptor.StartAccept();
