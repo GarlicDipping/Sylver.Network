@@ -19,9 +19,9 @@ namespace LiteNetwork.Network.Tests
         [InlineData("92.5.1.44", 8080)]
         [InlineData("156.16.255.55", 4444)]
         [InlineData("", 8080)]
-        public void CreateValidIPEndPoint(string ipAddress, int port)
+        public async void CreateValidIPEndPoint(string ipAddress, int port)
         {
-            var ipEndPoint = LiteNetworkHelpers.CreateIpEndPointAsync(ipAddress, port).Result;
+            var ipEndPoint = await LiteNetworkHelpers.CreateIpEndPointAsync(ipAddress, port);
 
             Assert.NotNull(ipEndPoint);
         }

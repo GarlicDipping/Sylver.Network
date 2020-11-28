@@ -182,7 +182,7 @@ namespace LiteNetwork.Common.Internal
                     try
                     {
                         using ILitePacketStream packetStream = _packetProcessor.CreatePacket(messageBuffer);
-                        await connectionToken.Connection.HandleMessageAsync(packetStream);
+                        await connectionToken.Connection.HandleMessageAsync(packetStream).ConfigureAwait(false);
                     }
                     catch (Exception e)
                     {
