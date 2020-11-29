@@ -1,4 +1,6 @@
-﻿namespace LiteNetwork.Server
+﻿using LiteNetwork.Common;
+
+namespace LiteNetwork.Server
 {
     /// <summary>
     /// Provides properties to configure a new <see cref="LiteServer{TUser}"/> instance.
@@ -34,6 +36,11 @@
         /// Gets the handled client buffer size.
         /// </summary>
         public int ClientBufferSize { get; }
+
+        /// <summary>
+        /// Gets or sets the receive strategy type.
+        /// </summary>
+        public ReceiveStrategyType ReceiveStrategy { get; set; }
 
         /// <summary>
         /// Creates a new empty <see cref="LiteServerConfiguration"/> instance.
