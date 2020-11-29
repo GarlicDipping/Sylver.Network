@@ -6,35 +6,11 @@ namespace LiteNetwork.Network.Tests
 {
     public class NetHelperTests
     {
-        [Fact]
-        public void BuildValidIPAddressTest()
-        {
-            var ipAddress = LiteNetworkHelpers.BuildIPAddress("127.0.0.1");
-
-            Assert.NotNull(ipAddress);
-        }
-
-        [Theory]
-        [InlineData("NotAnAddressOrHost")]
-        [InlineData(null)]
-        public void BuildInvalidIPAddressTest(string ipOrHost)
-        {
-            if (ipOrHost is null)
-            {
-                Assert.Throws<ArgumentNullException>(() => LiteNetworkHelpers.BuildIPAddress(ipOrHost));
-            }
-            else
-            {
-                Assert.Throws<AggregateException>(() => LiteNetworkHelpers.BuildIPAddress(ipOrHost)); 
-            }
-        }
-
         [Theory]
         [InlineData("0.0.0.0")]
         public void BuildUnspecifiedAddress(string ipOrHost)
         {
-            Assert.Throws<ArgumentException>(() => LiteNetworkHelpers.BuildIPAddress(ipOrHost));
-            Assert.Throws<ArgumentException>(() => LiteNetworkHelpers.CreateIpEndPoint(ipOrHost, 4444));
+            Assert.ThrowsAsync<ArgumentException>(() => LiteNetworkHelpers.CreateIpEndPointAsync(ipOrHost, 4444));
         }
 
 
@@ -43,9 +19,9 @@ namespace LiteNetwork.Network.Tests
         [InlineData("92.5.1.44", 8080)]
         [InlineData("156.16.255.55", 4444)]
         [InlineData("", 8080)]
-        public void CreateValidIPEndPoint(string ipAddress, int port)
+        public async void CreateValidIPEndPoint(string ipAddress, int port)
         {
-            var ipEndPoint = LiteNetworkHelpers.CreateIpEndPoint(ipAddress, port);
+            var ipEndPoint = await LiteNetworkHelpers.CreateIpEndPointAsync(ipAddress, port);
 
             Assert.NotNull(ipEndPoint);
         }
@@ -55,7 +31,7 @@ namespace LiteNetwork.Network.Tests
         [InlineData(-18334)]
         public void CreateIPEndPointWithInvalidPort(int port)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => LiteNetworkHelpers.CreateIpEndPoint("127.0.0.1", port));
+            Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => LiteNetworkHelpers.CreateIpEndPointAsync("127.0.0.1", port));
         }
 
         [Theory]
@@ -67,11 +43,11 @@ namespace LiteNetwork.Network.Tests
         {
             if (host is null)
             {
-                Assert.Throws<ArgumentNullException>(() => LiteNetworkHelpers.CreateIpEndPoint(host, 4444));
+                Assert.ThrowsAsync<ArgumentNullException>(() => LiteNetworkHelpers.CreateIpEndPointAsync(host, 4444));
             }
             else
             {
-                Assert.Throws<AggregateException>(() => LiteNetworkHelpers.CreateIpEndPoint(host, 4444));
+                Assert.ThrowsAsync<AggregateException>(() => LiteNetworkHelpers.CreateIpEndPointAsync(host, 4444));
             }
         }
     }

@@ -10,7 +10,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LiteNetwork.Server
 {
@@ -61,7 +64,7 @@ namespace LiteNetwork.Server
         public bool TryGetUser(Guid userId, out TUser? user) => _connectedUsers.TryGetValue(userId, out user);
 
         /// <inheritdoc />
-        public void Start()
+        public async void Start()
         {
             if (IsRunning)
             {
@@ -69,8 +72,9 @@ namespace LiteNetwork.Server
             }
 
             OnBeforeStart();
-            
-            _socket.Bind(LiteNetworkHelpers.CreateIpEndPoint(Configuration.Host, Configuration.Port));
+
+            IPEndPoint localEndPoint = await LiteNetworkHelpers.CreateIpEndPointAsync(Configuration.Host, Configuration.Port).ConfigureAwait(false);
+            _socket.Bind(localEndPoint);
             _socket.Listen(Configuration.Backlog);
             _sender.Start();
             _acceptor.StartAccept();
@@ -79,9 +83,24 @@ namespace LiteNetwork.Server
             OnAfterStart();
         }
 
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(Start, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        }
+
+        public Task StartAsync()
+        {
+            return Task.Factory.StartNew(Start, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        }
+
         /// <inheritdoc />
         public void Stop()
         {
+            if (!IsRunning)
+            {
+                throw new InvalidOperationException("Server is not running.");
+            }
+
             OnBeforeStop();
 
             foreach (var connectedUser in _connectedUsers)
@@ -94,6 +113,16 @@ namespace LiteNetwork.Server
 
             IsRunning = false;
             OnAfterStop();
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(Stop, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        }
+
+        public Task StopAsync()
+        {
+            return Task.Factory.StartNew(Stop, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
         /// <inheritdoc />
@@ -155,7 +184,11 @@ namespace LiteNetwork.Server
         /// </summary>
         public void Dispose()
         {
-            Stop();
+            if (IsRunning)
+            {
+                Stop();
+            }
+
             _socket.Dispose();
             _sender.Dispose();
             _acceptor.Dispose();

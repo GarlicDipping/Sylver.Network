@@ -1,6 +1,8 @@
 ﻿using LiteNetwork.Protocol.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LiteNetwork.Server.Abstractions
 {
@@ -19,7 +21,15 @@ namespace LiteNetwork.Server.Abstractions
 
         void Start();
 
+        Task StartAsync();
+
+        Task StartAsync(CancellationToken cancellationToken);
+
         void Stop();
+
+        Task StopAsync();
+
+        Task StopAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Disconnects an user.

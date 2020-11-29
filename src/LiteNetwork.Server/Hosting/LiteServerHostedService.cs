@@ -17,18 +17,12 @@ namespace LiteNetwork.Server.Hosting
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
-            {
-                _server.Start();
-            }, cancellationToken);
+            return _server.StartAsync(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return Task.Run(() =>
-            {
-                _server.Stop();
-            }, cancellationToken);
+            return _server.StopAsync(cancellationToken);
         }
     }
 }
