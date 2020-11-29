@@ -35,7 +35,7 @@
         /// <param name="token">Current data token.</param>
         /// <param name="buffer">Current buffer from socket receive operation.</param>
         /// <param name="bytesTransfered">Number of bytes transfered by the socket.</param>
-        /// <returns>True if the header is complete; false otherwise.</returns>
+        /// <returns>True if the header is complete; otherwise, false.</returns>
         bool ParseHeader(LiteDataToken token, byte[] buffer, int bytesTransfered);
 
         /// <summary>

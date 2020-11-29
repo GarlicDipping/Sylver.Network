@@ -3,6 +3,9 @@ using LiteNetwork.Protocol;
 
 namespace LiteNetwork.Server.Hosting
 {
+    /// <summary>
+    /// Builder options to use with host builder.
+    /// </summary>
     public class LiteServerBuilderOptions
     {
         /// <summary>
@@ -31,7 +34,8 @@ namespace LiteNetwork.Server.Hosting
         public ILitePacketProcessor PacketProcessor { get; set; }
 
         /// <summary>
-        /// Creates and initializes a new <see cref="LiteServerBuilderOptions"/> instance.
+        /// Creates and initializes a new <see cref="LiteServerBuilderOptions"/> instance
+        /// with a default <see cref="LitePacketProcessor"/>.
         /// </summary>
         internal LiteServerBuilderOptions()
         {

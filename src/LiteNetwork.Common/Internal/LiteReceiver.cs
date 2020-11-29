@@ -29,7 +29,7 @@ namespace LiteNetwork.Common.Internal
         public event EventHandler<Exception>? Error;
 
         /// <summary>
-        /// Creates a new <see cref="LiteReceiver"/> instance with a specified <see cref="ILitePacketProcessor"/>.
+        /// Creates a new <see cref="LiteReceiver"/> instance with the given <see cref="ILitePacketProcessor"/>.
         /// </summary>
         /// <param name="packetProcessor">Packet processor to process incoming data and convert it into an exploitable packet stream.</param>
         protected LiteReceiver(ILitePacketProcessor packetProcessor)

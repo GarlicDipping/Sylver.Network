@@ -17,6 +17,10 @@ using System.Threading.Tasks;
 
 namespace LiteNetwork.Server
 {
+    /// <summary>
+    /// Provides a basic <see cref="ILiteServer{TUser}"/> implementation.
+    /// </summary>
+    /// <typeparam name="TUser">The user type that the server will be use.</typeparam>
     public class LiteServer<TUser> : ILiteServer<TUser> where TUser : LiteServerUser
     {
         private readonly ILogger<LiteServer<TUser>>? _logger;
@@ -28,12 +32,22 @@ namespace LiteNetwork.Server
         private readonly LiteServerReceiver _receiver;
         private readonly LiteServerSender _sender;
 
+        /// <inheritdoc />
         public bool IsRunning { get; private set; }
 
+        /// <inheritdoc />
         public LiteServerConfiguration Configuration { get; }
 
+        /// <inheritdoc />
         public IEnumerable<TUser> ConnectedUsers => _connectedUsers.Values;
 
+        /// <summary>
+        /// Creates a new <see cref="LiteServer{TUser}"/> instance with a server configuration,
+        /// packet processor and a service provider.
+        /// </summary>
+        /// <param name="configuration">Server configuration.</param>
+        /// <param name="packetProcessor">Packet processor to use.</param>
+        /// <param name="serviceProvider">Service provider to use.</param>
         public LiteServer(LiteServerConfiguration configuration, ILitePacketProcessor? packetProcessor = null, IServiceProvider serviceProvider = null!)
         {
             Configuration = configuration;
@@ -59,8 +73,10 @@ namespace LiteNetwork.Server
             _sender = new LiteServerSender();
         }
 
+        /// <inheritdoc />
         public TUser? GetUser(Guid userId) => TryGetUser(userId, out TUser? user) ? user : default;
 
+        /// <inheritdoc />
         public bool TryGetUser(Guid userId, out TUser? user) => _connectedUsers.TryGetValue(userId, out user);
 
         /// <inheritdoc />
@@ -128,23 +144,23 @@ namespace LiteNetwork.Server
         /// <inheritdoc />
         public void DisconnectUser(Guid userId)
         {
-            if (!_connectedUsers.TryRemove(userId, out TUser client))
+            if (!_connectedUsers.TryRemove(userId, out TUser user))
             {
-                // TODO: error; cannot find client by id.
+                _logger?.LogError($"Cannot find user with id '{user.Id}'.");
                 return;
             }
 
-            _logger?.LogInformation($"Client with id '{client.Id}' disconnected.");
-            client.OnDisconnected();
-            client.Dispose();
+            _logger?.LogTrace($"User with id '{user.Id}' disconnected.");
+            user.OnDisconnected();
+            user.Dispose();
         }
 
         /// <inheritdoc />
-        public void SendTo(TUser connection, ILitePacketStream packet)
+        public void SendTo(TUser user, ILitePacketStream packet)
         {
-            if (connection is null)
+            if (user is null)
             {
-                throw new ArgumentNullException(nameof(connection));
+                throw new ArgumentNullException(nameof(user));
             }
 
             if (packet is null)
@@ -152,15 +168,15 @@ namespace LiteNetwork.Server
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            _sender.Send(new LiteMessage(connection.Socket, packet.Buffer));
+            _sender.Send(new LiteMessage(user.Socket, packet.Buffer));
         }
 
         /// <inheritdoc />
-        public void SendTo(IEnumerable<TUser> connections, ILitePacketStream packet)
+        public void SendTo(IEnumerable<TUser> users, ILitePacketStream packet)
         {
-            if (connections is null)
+            if (users is null)
             {
-                throw new ArgumentNullException(nameof(connections));
+                throw new ArgumentNullException(nameof(users));
             }
 
             if (packet is null)
@@ -170,7 +186,7 @@ namespace LiteNetwork.Server
 
             byte[] messageData = packet.Buffer;
 
-            foreach (TUser connection in connections)
+            foreach (TUser connection in users)
             {
                 _sender.Send(new LiteMessage(connection.Socket, messageData));
             }
@@ -248,7 +264,7 @@ namespace LiteNetwork.Server
             user.Socket = e.AcceptSocket;
             user.SendAction = packet => SendTo(user, packet);
 
-            _logger?.LogInformation($"New client connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
+            _logger?.LogInformation($"New user connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
             user.OnConnected();
             _receiver.StartReceiving(user, user.Socket);
         }

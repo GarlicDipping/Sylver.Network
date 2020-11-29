@@ -20,7 +20,7 @@ namespace LiteNetwork.Common
         Task HandleMessageAsync(ILitePacketStream incomingPacketStream);
 
         /// <summary>
-        /// Sends an <see cref="ILitePacketStream"/> to the remote host.
+        /// Sends an <see cref="ILitePacketStream"/> to the remote end point.
         /// </summary>
         /// <param name="packet">Packet stream.</param>
         void Send(ILitePacketStream packet);
