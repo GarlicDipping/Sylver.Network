@@ -81,7 +81,7 @@ namespace LiteNetwork.Common.Internal
 
                         if (messages.Any())
                         {
-                            ProcessReceivedMessage(clientToken, messages);
+                            ProcessReceivedMessages(clientToken, messages);
                         }
 
                         if (clientToken.DataToken.DataStartOffset >= socketAsyncEvent.BytesTransferred)
@@ -173,23 +173,34 @@ namespace LiteNetwork.Common.Internal
         /// <param name="connectionToken">Current connection token.</param>
         /// <param name="messages">Collection of message data buffers.</param>
         [ExcludeFromCodeCoverage]
-        protected virtual void ProcessReceivedMessage(ILiteConnectionToken connectionToken, IEnumerable<byte[]> messages)
+        protected virtual void ProcessReceivedMessages(ILiteConnectionToken connectionToken, IEnumerable<byte[]> messages)
         {
             Task.Run(async () =>
             {
                 foreach (var messageBuffer in messages)
                 {
-                    try
-                    {
-                        using ILitePacketStream packetStream = _packetProcessor.CreatePacket(messageBuffer);
-                        await connectionToken.Connection.HandleMessageAsync(packetStream).ConfigureAwait(false);
-                    }
-                    catch (Exception e)
-                    {
-                        OnError(e);
-                    }
+                    await ProcessReceivedMessage(connectionToken.Connection, messageBuffer);
                 }
             });
+        }
+
+        /// <summary>
+        /// Process a single received message.
+        /// </summary>
+        /// <param name="connection">Connection that received the message.</param>
+        /// <param name="messageData">Message data.</param>
+        /// <returns></returns>
+        internal async Task ProcessReceivedMessage(ILiteConnection connection, byte[] messageData)
+        {
+            try
+            {
+                using ILitePacketStream packetStream = _packetProcessor.CreatePacket(messageData);
+                await connection.HandleMessageAsync(packetStream).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                OnError(e);
+            }
         }
     }
 }

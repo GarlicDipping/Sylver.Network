@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace LiteNetwork.Common
 {
+    /// <summary>
+    /// Provides an abstraction that represents a living connection.
+    /// </summary>
     public interface ILiteConnection
     {
         /// <summary>
