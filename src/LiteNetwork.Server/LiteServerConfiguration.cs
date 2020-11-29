@@ -1,7 +1,7 @@
 ﻿namespace LiteNetwork.Server
 {
     /// <summary>
-    /// Provides properties to configure a new <see cref="LiteServer{T}"/> instance.
+    /// Provides properties to configure a new <see cref="LiteServer{TUser}"/> instance.
     /// </summary>
     public class LiteServerConfiguration
     {

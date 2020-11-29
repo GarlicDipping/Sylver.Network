@@ -3,6 +3,9 @@ using System.IO;
 
 namespace LiteNetwork.Protocol.Abstractions
 {
+    /// <summary>
+    /// Provides a basic mechanism to read and write inside packet stream.
+    /// </summary>
     public interface ILitePacketStream : IDisposable
     {
         /// <summary>

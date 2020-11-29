@@ -21,7 +21,7 @@ namespace LiteNetwork.Protocol.Internal
         }
 
         /// <summary>
-        /// Parses incoming buffer for a given connection.
+        /// Parses incoming buffer for a specified connection.
         /// </summary>
         /// <param name="token">Client token information.</param>
         /// <param name="buffer">Received buffer.</param>

@@ -11,7 +11,6 @@ namespace LiteNetwork.Common
         /// </summary>
         Guid Id { get; }
 
-
         /// <summary>
         /// Handle an incoming <see cref="ILitePacketStream"/> asynchronously.
         /// </summary>

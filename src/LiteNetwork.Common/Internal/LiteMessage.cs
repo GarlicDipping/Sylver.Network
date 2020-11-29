@@ -18,7 +18,7 @@ namespace LiteNetwork.Common.Internal
         public byte[] Data { get; }
 
         /// <summary>
-        /// Creates a new <see cref="LiteMessage"/> instance with a <see cref="Socket"/> connection
+        /// Creates a new <see cref="LiteMessage"/> instance with a <see cref="Socket"/>
         /// and an array of data.
         /// </summary>
         /// <param name="connection">Socket connection.</param>
