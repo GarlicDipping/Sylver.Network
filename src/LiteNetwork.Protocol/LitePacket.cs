@@ -1,9 +1,8 @@
-﻿using LiteNetwork.Protocol.Abstractions;
-using System.IO;
+﻿using System.IO;
 
 namespace LiteNetwork.Protocol
 {
-    public class LitePacket : LitePacketStream, ILitePacketStream
+    public class LitePacket : LitePacketStream
     {
         /// <summary>
         /// Gets the default <see cref="LitePacket"/> header size. (4 bytes)
