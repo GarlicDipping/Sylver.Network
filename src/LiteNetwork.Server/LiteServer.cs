@@ -128,11 +128,13 @@ namespace LiteNetwork.Server
             OnAfterStart();
         }
 
+        /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
         {
             return Task.Factory.StartNew(Start, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
+        /// <inheritdoc />
         public Task StartAsync()
         {
             return Task.Factory.StartNew(Start, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
@@ -160,11 +162,13 @@ namespace LiteNetwork.Server
             OnAfterStop();
         }
 
+        /// <inheritdoc />
         public Task StopAsync(CancellationToken cancellationToken)
         {
             return Task.Factory.StartNew(Stop, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
+        /// <inheritdoc />
         public Task StopAsync()
         {
             return Task.Factory.StartNew(Stop, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);

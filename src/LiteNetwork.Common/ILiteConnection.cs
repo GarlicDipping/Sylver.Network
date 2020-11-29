@@ -15,7 +15,7 @@ namespace LiteNetwork.Common
         /// Handle an incoming <see cref="ILitePacketStream"/> asynchronously.
         /// </summary>
         /// <param name="incomingPacketStream">Incoming packet.</param>
-        /// <returns>A <see cref="Task"/> object representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="Task"/> that completes when finished the handle message operation.</returns>
         Task HandleMessageAsync(ILitePacketStream incomingPacketStream);
 
         /// <summary>

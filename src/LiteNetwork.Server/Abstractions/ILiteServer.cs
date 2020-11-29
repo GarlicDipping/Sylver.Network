@@ -47,21 +47,39 @@ namespace LiteNetwork.Server.Abstractions
         bool TryGetUser(Guid userId, out TUser? user);
 
         /// <summary>
-        /// Starts the server.
+        /// Starts to listening and accept users.
         /// </summary>
         void Start();
 
+        /// <summary>
+        /// Starts to listening and accept users asynchronously.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the <see cref="ILiteServer{TUser}"/> starts.</returns>
         Task StartAsync();
 
+        /// <summary>
+        /// Starts to listening and accept users asynchronously with the specified <see cref="CancellationToken"/>.
+        /// </summary>
+        /// <param name="cancellationToken">Used to indicate when stop should no longer be successfully.</param>
+        /// <returns>A <see cref="Task"/> that completes when the <see cref="ILiteServer{TUser}"/> starts.</returns>
         Task StartAsync(CancellationToken cancellationToken);
 
         /// <summary>
-        /// Stops the server.
+        /// Stop listening and disconnect all connectected users.
         /// </summary>
         void Stop();
 
+        /// <summary>
+        /// Attempt to stop the server asynchronously.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that completes when the <see cref="ILiteServer{TUser}"/> stops.</returns>
         Task StopAsync();
 
+        /// <summary>
+        /// Attempt to stop the server asynchronously with the specified <see cref="CancellationToken"/>.
+        /// </summary>
+        /// <param name="cancellationToken">Used to indicate when stop should no longer be successfully.</param>
+        /// <returns>A <see cref="Task"/> that completes when the <see cref="ILiteServer{TUser}"/> stops.</returns>
         Task StopAsync(CancellationToken cancellationToken);
 
         /// <summary>
