@@ -6,15 +6,24 @@ using System.Threading.Tasks;
 
 namespace LiteNetwork.Server
 {
-    public class LiteServerUser : ILiteConnection
+    /// <summary>
+    /// Provides a basic user implementation that can be used for a <see cref="LiteServer{TUser}"/>.
+    /// </summary>
+    public class LiteServerUser : ILiteConnection, IDisposable
     {
         private bool _disposed;
 
         /// <inheritdoc />
         public Guid Id { get; } = Guid.NewGuid();
 
+        /// <summary>
+        /// Gets or sets the user's connection socket
+        /// </summary>
         internal Socket Socket { get; set; } = null!;
 
+        /// <summary>
+        /// Defines an action to send an <see cref="ILitePacketStream"/>.
+        /// </summary>
         internal Action<ILitePacketStream>? SendAction { get; set; }
 
         /// <inheritdoc />
@@ -26,14 +35,23 @@ namespace LiteNetwork.Server
         /// <inheritdoc />
         public void Send(ILitePacketStream packet) => SendAction?.Invoke(packet);
 
+        /// <summary>
+        /// Called when this user has been connected.
+        /// </summary>
         protected internal virtual void OnConnected()
         {
         }
 
+        /// <summary>
+        /// Called when this user has been Disconnected.
+        /// </summary>
         protected internal virtual void OnDisconnected()
         {
         }
 
+        /// <summary>
+        /// Dispose a <see cref="LiteServerUser"/> resources.
+        /// </summary>
         public virtual void Dispose()
         {
             if (!_disposed)

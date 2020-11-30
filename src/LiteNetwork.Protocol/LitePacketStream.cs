@@ -8,7 +8,7 @@ using System.Text;
 namespace LiteNetwork.Protocol
 {
     /// <summary>
-    /// Provides a mechanism to read inside a packet stream.
+    /// Provides a basic <see cref="ILitePacketStream"/> implementation.
     /// </summary>
     public class LitePacketStream : MemoryStream, ILitePacketStream
     {

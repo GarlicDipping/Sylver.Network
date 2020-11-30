@@ -12,13 +12,14 @@ namespace LiteNetwork.Common
         Guid Id { get; }
 
         /// <summary>
-        /// Handle an incoming packet asynchronously.
+        /// Handle an incoming <see cref="ILitePacketStream"/> asynchronously.
         /// </summary>
         /// <param name="incomingPacketStream">Incoming packet.</param>
+        /// <returns>A <see cref="Task"/> that completes when finished the handle message operation.</returns>
         Task HandleMessageAsync(ILitePacketStream incomingPacketStream);
 
         /// <summary>
-        /// Sends a packet to the remote host.
+        /// Sends an <see cref="ILitePacketStream"/> to the remote end point.
         /// </summary>
         /// <param name="packet">Packet stream.</param>
         void Send(ILitePacketStream packet);

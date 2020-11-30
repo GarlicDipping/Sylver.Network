@@ -13,19 +13,19 @@ namespace LiteNetwork.Server.Internal
         private readonly SocketAsyncEventArgs _socketEvent;
 
         /// <summary>
-        /// Event fired when a client is accepted.
+        /// The event used when a client has been accepted.
         /// </summary>
         public event EventHandler<SocketAsyncEventArgs>? OnClientAccepted;
 
         /// <summary>
-        /// Event fired when an error occurs during the acceptation process.
+        /// The event used when an error has been occurred during the acceptation process.
         /// </summary>
         public event EventHandler<Exception>? OnError;
 
         /// <summary>
-        /// Creates a new <see cref="LiteServerAcceptor"/> instance.
+        /// Creates a new <see cref="LiteServerAcceptor"/> instance with the given <see cref="Socket"/>.
         /// </summary>
-        /// <param name="serverSocket">LiteServer's listening socket.</param>
+        /// <param name="serverSocket"><see cref="LiteServer{TUser}"/> listening socket.</param>
         public LiteServerAcceptor(Socket serverSocket)
         {
             _listeningSocket = serverSocket;
@@ -100,6 +100,9 @@ namespace LiteNetwork.Server.Internal
             }
         }
 
+        /// <summary>
+        /// Dispose the <see cref="LiteServerAcceptor"/> resources.
+        /// </summary>
         public void Dispose()
         {
             _socketEvent.Dispose();

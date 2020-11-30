@@ -18,7 +18,8 @@ namespace LiteNetwork.Common.Internal
         public LiteDataToken DataToken { get; }
 
         /// <summary>
-        /// Creates a new <see cref="LiteConnectionToken"/> instance.
+        /// Creates a new <see cref="LiteConnectionToken"/> instance with a <see cref="ILiteConnection"/>
+        /// and a <see cref="System.Net.Sockets.Socket"/>.
         /// </summary>
         /// <param name="connection">Current connection.</param>
         /// <param name="socket">Current socket connection.</param>
