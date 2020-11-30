@@ -1,9 +1,8 @@
-﻿using LiteNetwork.Protocol.Abstractions;
-using System.IO;
+﻿using System.IO;
 
 namespace LiteNetwork.Protocol
 {
-    public class LitePacket : LitePacketStream, ILitePacket
+    public class LitePacket : LitePacketStream
     {
         /// <summary>
         /// Gets the default <see cref="LitePacket"/> header size. (4 bytes)
@@ -42,7 +41,7 @@ namespace LiteNetwork.Protocol
         }
 
         /// <summary>
-        /// Creates a new <see cref="LitePacket"/> in read-only mode.
+        /// Creates a new <see cref="LitePacket"/> in read-only mode with an array of bytes.
         /// </summary>
         /// <param name="buffer">Input buffer</param>
         public LitePacket(byte[] buffer)

@@ -10,7 +10,7 @@ using System.Net.Sockets;
 namespace LiteNetwork.Server.Internal
 {
     /// <summary>
-    /// Overrides the basic <see cref="LiteReceiver"/> for the lite server needs.
+    /// Overrides the basic <see cref="LiteReceiver"/> for the server needs.
     /// </summary>
     internal class LiteServerReceiver : LiteReceiver
     {
@@ -19,7 +19,8 @@ namespace LiteNetwork.Server.Internal
         private readonly ReceiveStrategyType _receiveStrategy;
 
         /// <summary>
-        /// Creates a new <see cref="LiteServerReceiver"/> instance.
+        /// Creates a new <see cref="LiteServerReceiver"/> instance with the given <see cref="ILitePacketProcessor"/>
+        /// and a client buffer size.
         /// </summary>
         /// <param name="packetProcessor">Current packet processor used in the server.</param>
         /// <param name="clientBufferSize">Client buffer size defined in server configuration.</param>

@@ -3,6 +3,9 @@ using System.IO;
 
 namespace LiteNetwork.Protocol.Abstractions
 {
+    /// <summary>
+    /// Provides a basic mechanism to read and write inside packet stream.
+    /// </summary>
     public interface ILitePacketStream : IDisposable
     {
         /// <summary>
@@ -28,7 +31,6 @@ namespace LiteNetwork.Protocol.Abstractions
         /// <summary>
         /// Gets the packet stream buffer.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>")]
         byte[] Buffer { get; }
 
         /// <summary>

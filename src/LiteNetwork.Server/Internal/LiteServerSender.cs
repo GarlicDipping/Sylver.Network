@@ -4,6 +4,9 @@ using System.Net.Sockets;
 
 namespace LiteNetwork.Server.Internal
 {
+    /// <summary>
+    /// Overrides the basic <see cref="LiteSender"/> for the server needs.
+    /// </summary>
     internal class LiteServerSender : LiteSender
     {
         private readonly ObjectPool<SocketAsyncEventArgs> _writePool;

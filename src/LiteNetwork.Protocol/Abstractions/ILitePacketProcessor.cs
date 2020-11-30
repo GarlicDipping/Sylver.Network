@@ -16,26 +16,26 @@
         bool IncludeHeader { get; }
 
         /// <summary>
-        /// Gets the packet message length.
+        /// Gets the packet message length with the given buffer/>.
         /// </summary>
         /// <param name="buffer">Header buffer.</param>
         /// <returns>Packet message data length.</returns>
         int GetMessageLength(byte[] buffer);
 
         /// <summary>
-        /// Creates a new <see cref="INetPacketStream"/> packet instance.
+        /// Creates a new <see cref="ILitePacketStream"/> packet instance with the given buffer.
         /// </summary>
-        /// <param name="buffer">Input buffer</param>
-        /// <returns>New packet</returns>
+        /// <param name="buffer">Input buffer.</param>
+        /// <returns>New <see cref="ILitePacketStream"/> instance in read-only mode.</returns>
         ILitePacketStream CreatePacket(byte[] buffer);
 
         /// <summary>
-        /// Parses the packet header.
+        /// Parses the packet header based on the given data token information..
         /// </summary>
         /// <param name="token">Current data token.</param>
         /// <param name="buffer">Current buffer from socket receive operation.</param>
         /// <param name="bytesTransfered">Number of bytes transfered by the socket.</param>
-        /// <returns>True if the header is complete; false otherwise.</returns>
+        /// <returns>True if the header is complete; otherwise, false.</returns>
         bool ParseHeader(LiteDataToken token, byte[] buffer, int bytesTransfered);
 
         /// <summary>

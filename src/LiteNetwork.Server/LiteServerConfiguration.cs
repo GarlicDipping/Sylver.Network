@@ -3,7 +3,7 @@
 namespace LiteNetwork.Server
 {
     /// <summary>
-    /// Provides properties to configure a new <see cref="LiteServer{T}"/> instance.
+    /// Provides properties to configure a new <see cref="LiteServer{TUser}"/> instance.
     /// </summary>
     public class LiteServerConfiguration
     {
@@ -50,7 +50,8 @@ namespace LiteNetwork.Server
         }
 
         /// <summary>
-        /// Creates a new basic <see cref="LiteServerConfiguration"/> instance.
+        /// Creates a new <see cref="LiteServerConfiguration"/> instance with 
+        /// the specified host address and listening port.
         /// </summary>
         /// <param name="host">Server host address.</param>
         /// <param name="port">Server listening port.</param>
@@ -60,7 +61,8 @@ namespace LiteNetwork.Server
         }
 
         /// <summary>
-        /// Creates a new basic <see cref="LiteServerConfiguration"/> instance.
+        /// Creates a new <see cref="LiteServerConfiguration"/> instance with
+        /// the specified host address, listening port and backlog.
         /// </summary>
         /// <param name="host">Server host address.</param>
         /// <param name="port">Server listening port.</param>
@@ -71,7 +73,8 @@ namespace LiteNetwork.Server
         }
 
         /// <summary>
-        /// Creates a new basic <see cref="LiteServerConfiguration"/> instance.
+        /// Creates a new <see cref="LiteServerConfiguration"/> instance with
+        /// the specified host address, listening port, backlog and client buffer size.
         /// </summary>
         /// <param name="host">Server host address.</param>
         /// <param name="port">Server listening port.</param>

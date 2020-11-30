@@ -63,7 +63,7 @@ namespace LiteNetwork.Common.Internal
         }
         
         /// <summary>
-        /// Sends a message.
+        /// Sends a <see cref="LiteMessage"/>.
         /// </summary>
         /// <param name="message">Lite message to be sent.</param>
         public void Send(LiteMessage message) => _sendingCollection.Add(message);
@@ -100,7 +100,7 @@ namespace LiteNetwork.Common.Internal
         }
 
         /// <summary>
-        /// Sends the message data to the given connection Socket.
+        /// Sends the message data to the given connection <see cref="Socket"/>.
         /// </summary>
         /// <param name="connectionSocket">Client connection.</param>
         /// <param name="data">Message data.</param>
@@ -129,7 +129,7 @@ namespace LiteNetwork.Common.Internal
         /// <summary>
         /// Disposes the sender resources.
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing">Disposing value.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)

@@ -11,12 +11,12 @@ namespace LiteNetwork.Server.Hosting
     public static class HostBuilderExtensions
     {
         /// <summary>
-        /// Initializes a basic LiteServer for the given <typeparamref name="TLiteServerUser"/> user.
+        /// Initializes a basic <see cref="LiteServer{TUser}"/> with the specified <typeparamref name="TLiteServerUser"/>.
         /// </summary>
         /// <typeparam name="TLiteServerUser">Server's user type.</typeparam>
         /// <param name="hostBuilder">Current host builder.</param>
         /// <param name="builder">LiteServer builder.</param>
-        /// <returns>Host builder.</returns>
+        /// <returns>The <see cref="IHostBuilder"/>.</returns>
         public static IHostBuilder UseLiteServer<TLiteServerUser>(this IHostBuilder hostBuilder, Action<HostBuilderContext, LiteServerBuilderOptions> builder)
             where TLiteServerUser : LiteServerUser
         {
@@ -50,6 +50,14 @@ namespace LiteNetwork.Server.Hosting
             return hostBuilder;
         }
 
+        /// <summary>
+        /// Initializes a <typeparamref name="TLiteServer"/> with the specified <typeparamref name="TLiteServerUser"/>.
+        /// </summary>
+        /// <typeparam name="TLiteServer">Server type.</typeparam>
+        /// <typeparam name="TLiteServerUser">Server's user type.</typeparam>
+        /// <param name="hostBuilder">Current host builder.</param>
+        /// <param name="builder">LiteServer builder.</param>
+        /// <returns>The <see cref="IHostBuilder"/>.</returns>
         public static IHostBuilder UseLiteServer<TLiteServer, TLiteServerUser>(this IHostBuilder hostBuilder, Action<HostBuilderContext, LiteServerBuilderOptions> builder)
             where TLiteServer : class, ILiteServer<TLiteServerUser>
             where TLiteServerUser : LiteServerUser
