@@ -1,9 +1,10 @@
 ﻿using LiteNetwork.Protocol;
+using System;
 using System.Net.Sockets;
 
 namespace LiteNetwork.Common
 {
-    public interface ILiteConnectionToken
+    public interface ILiteConnectionToken : IDisposable
     {
         /// <summary>
         /// Gets the connection attached to the current token.
@@ -19,5 +20,11 @@ namespace LiteNetwork.Common
         /// Gets the data token.
         /// </summary>
         LiteDataToken DataToken { get; }
+
+        /// <summary>
+        /// Adds the given message buffer into the received message queue.
+        /// </summary>
+        /// <param name="message">Message data buffer to add.</param>
+        void EnqueueMessage(byte[] message);
     }
 }

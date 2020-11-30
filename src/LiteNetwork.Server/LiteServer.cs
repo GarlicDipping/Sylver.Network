@@ -95,7 +95,7 @@ namespace LiteNetwork.Server
             _acceptor.OnClientAccepted += OnClientAccepted;
             _acceptor.OnError += OnAcceptorError;
 
-            _receiver = new LiteServerReceiver(_packetProcessor, Configuration.ClientBufferSize, Configuration.ReceiveStrategy);
+            _receiver = new LiteServerReceiver(_packetProcessor, Configuration.ReceiveStrategy, Configuration.ClientBufferSize);
             _receiver.Disconnected += OnDisconnected;
             _receiver.Error += OnReceiverError;
 
@@ -294,8 +294,7 @@ namespace LiteNetwork.Server
                 throw new LiteNetworkException($"The accepted socket is null.");
             }
 
-            user.Initialize(e.AcceptSocket, packet => SendTo(user, packet), Configuration.ReceiveStrategy);
-
+            user.Initialize(e.AcceptSocket, packet => SendTo(user, packet));
             _logger?.LogInformation($"New user connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
             user.OnConnected();
             _receiver.StartReceiving(user, user.Socket);

@@ -19,6 +19,11 @@ namespace LiteNetwork.Common.Internal
         private readonly LitePacketParser _packetParser;
 
         /// <summary>
+        /// Gets the receive strategy type.
+        /// </summary>
+        protected ReceiveStrategyType ReceiveStrategy { get; }
+
+        /// <summary>
         /// The event used when a client has been disconnected.
         /// </summary>
         public event EventHandler<ILiteConnection>? Disconnected;
@@ -32,9 +37,10 @@ namespace LiteNetwork.Common.Internal
         /// Creates a new <see cref="LiteReceiver"/> instance with a <see cref="ILitePacketProcessor"/>.
         /// </summary>
         /// <param name="packetProcessor">Packet processor to process incoming data and convert it into an exploitable packet stream.</param>
-        protected LiteReceiver(ILitePacketProcessor packetProcessor)
+        protected LiteReceiver(ILitePacketProcessor packetProcessor, ReceiveStrategyType receiveStrategy)
         {
             _packetProcessor = packetProcessor;
+            ReceiveStrategy = receiveStrategy;
             _packetParser = new LitePacketParser(_packetProcessor);
         }
 
@@ -45,7 +51,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="socket">User socket.</param>
         public void StartReceiving(ILiteConnection connection, Socket socket)
         {
-            var token = new LiteConnectionToken(connection, socket);
+            var token = new LiteConnectionToken(connection, socket, ReceiveStrategy, ProcessReceivedMessage);
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
             socketAsyncEvent.UserToken = token;
 
@@ -105,6 +111,7 @@ namespace LiteNetwork.Common.Internal
                 }
                 else
                 {
+                    clientToken.Dispose();
                     ClearSocketEvent(socketAsyncEvent);
                     OnDisconnected(clientToken.Connection);
                 }
@@ -182,13 +189,23 @@ namespace LiteNetwork.Common.Internal
         [ExcludeFromCodeCoverage]
         protected virtual void ProcessReceivedMessages(ILiteConnectionToken connectionToken, IEnumerable<byte[]> messages)
         {
-            Task.Run(async () =>
+            if (ReceiveStrategy == ReceiveStrategyType.Default)
             {
-                foreach (var messageBuffer in messages)
+                Task.Run(async () =>
                 {
-                    await ProcessReceivedMessage(connectionToken.Connection, messageBuffer);
+                    foreach (var messageBuffer in messages)
+                    {
+                        await ProcessReceivedMessage(connectionToken.Connection, messageBuffer);
+                    }
+                });
+            }
+            else if (ReceiveStrategy == ReceiveStrategyType.Queued)
+            {
+                foreach (byte[] message in messages)
+                {
+                    connectionToken.EnqueueMessage(message);
                 }
-            });
+            }
         }
 
         /// <summary>
