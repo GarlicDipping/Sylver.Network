@@ -51,7 +51,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="socket">User socket.</param>
         public void StartReceiving(ILiteConnection connection, Socket socket)
         {
-            var token = new LiteConnectionToken(connection, socket, ReceiveStrategy, ProcessReceivedMessage);
+            var token = new LiteReceiverConnectionToken(connection, socket, ReceiveStrategy, ProcessReceivedMessage);
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
             socketAsyncEvent.UserToken = token;
 

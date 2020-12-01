@@ -10,13 +10,12 @@ namespace LiteNetwork.Common.Internal
     /// <summary>
     /// Provides a data structure representing a lite connection token used for the receive process.
     /// </summary>
-    internal class LiteConnectionToken : ILiteConnectionToken
+    internal class LiteReceiverConnectionToken : ILiteConnectionToken
     {
         private readonly ReceiveStrategyType _receiveStrategy;
         private readonly Func<ILiteConnection, byte[], Task> _handlerAction;
 
         private readonly BlockingCollection<byte[]> _receiveMessageQueue = null!;
-        private readonly Task _receiveTask = null!;
         private readonly CancellationToken _receiveCancellationToken;
         private readonly CancellationTokenSource _receiveCancellationTokenSource = null!;
 
@@ -30,14 +29,14 @@ namespace LiteNetwork.Common.Internal
         public LiteDataToken DataToken { get; }
 
         /// <summary>
-        /// Creates a new <see cref="LiteConnectionToken"/> instance with a <see cref="ILiteConnection"/>
+        /// Creates a new <see cref="LiteReceiverConnectionToken"/> instance with a <see cref="ILiteConnection"/>
         /// and a <see cref="System.Net.Sockets.Socket"/>.
         /// </summary>
         /// <param name="connection">Current connection.</param>
         /// <param name="socket">Current socket connection.</param>
         /// <param name="receiveStrategy">Receive strategy.</param>
         /// <param name="handlerAction">Action to execute when a packet message is being processed.</param>
-        public LiteConnectionToken(ILiteConnection connection, Socket socket, ReceiveStrategyType receiveStrategy, Func<ILiteConnection, byte[], Task> handlerAction)
+        public LiteReceiverConnectionToken(ILiteConnection connection, Socket socket, ReceiveStrategyType receiveStrategy, Func<ILiteConnection, byte[], Task> handlerAction)
         {
             Connection = connection;
             Socket = socket;
@@ -50,7 +49,7 @@ namespace LiteNetwork.Common.Internal
                 _receiveMessageQueue = new BlockingCollection<byte[]>();
                 _receiveCancellationTokenSource = new CancellationTokenSource();
                 _receiveCancellationToken = _receiveCancellationTokenSource.Token;
-                _receiveTask = Task.Factory.StartNew(OnProcessMessageQueue, 
+                Task.Factory.StartNew(OnProcessMessageQueue, 
                     _receiveCancellationToken, 
                     TaskCreationOptions.LongRunning, 
                     TaskScheduler.Default);
