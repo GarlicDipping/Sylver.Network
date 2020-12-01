@@ -1,4 +1,5 @@
-﻿using LiteNetwork.Common.Internal;
+﻿using LiteNetwork.Common;
+using LiteNetwork.Common.Internal;
 using LiteNetwork.Protocol.Abstractions;
 using Microsoft.Extensions.ObjectPool;
 using System.Buffers;
@@ -19,9 +20,10 @@ namespace LiteNetwork.Server.Internal
         /// and a client buffer size.
         /// </summary>
         /// <param name="packetProcessor">Current packet processor used in the server.</param>
+        /// <param name="receiveStrategy">The receive strategy type for every received message.</param>
         /// <param name="clientBufferSize">Client buffer size defined in server configuration.</param>
-        public LiteServerReceiver(ILitePacketProcessor packetProcessor, int clientBufferSize) 
-            : base(packetProcessor)
+        public LiteServerReceiver(ILitePacketProcessor packetProcessor, ReceiveStrategyType receiveStrategy, int clientBufferSize) 
+            : base(packetProcessor, receiveStrategy)
         {
             _readPool = ObjectPool.Create<SocketAsyncEventArgs>();
             _clientBufferSize = clientBufferSize;

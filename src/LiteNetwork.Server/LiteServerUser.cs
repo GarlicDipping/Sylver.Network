@@ -26,6 +26,10 @@ namespace LiteNetwork.Server
         /// </summary>
         internal Action<ILitePacketStream>? SendAction { get; set; }
 
+        public LiteServerUser()
+        {
+        }
+
         /// <inheritdoc />
         public virtual Task HandleMessageAsync(ILitePacketStream incomingPacketStream)
         {
@@ -38,6 +42,12 @@ namespace LiteNetwork.Server
         /// <summary>
         /// Called when this user has been connected.
         /// </summary>
+        internal void Initialize(Socket socket, Action<ILitePacketStream> sendAction)
+        {
+            Socket = socket;
+            SendAction = sendAction;
+        }
+
         protected internal virtual void OnConnected()
         {
         }
