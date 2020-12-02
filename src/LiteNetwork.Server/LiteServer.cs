@@ -43,7 +43,7 @@ namespace LiteNetwork.Server
 
         /// <summary>
         /// Creates a new <see cref="LiteServer{TUser}"/> instance with a server configuration
-        /// and a fault <see cref="ILitePacketProcessor"/>.
+        /// and a default <see cref="ILitePacketProcessor"/>.
         /// </summary>
         /// <param name="configuration">Server configuration</param>
         public LiteServer(LiteServerConfiguration configuration)

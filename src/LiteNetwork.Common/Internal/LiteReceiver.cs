@@ -214,6 +214,7 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         /// <param name="connection">Connection that received the message.</param>
         /// <param name="messageData">Message data.</param>
+        /// <returns>A <see cref="Task"/> that completes when process the received message.</returns>
         internal async Task ProcessReceivedMessage(ILiteConnection connection, byte[] messageData)
         {
             try

@@ -43,8 +43,11 @@ namespace LiteNetwork.Server
         public void Send(ILitePacketStream packet) => SendAction?.Invoke(packet);
 
         /// <summary>
-        /// Called when this user has been connected.
+        /// Initialize the <see cref="LiteServerUser"/> with the given <see cref="System.Net.Sockets.Socket"/>
+        /// and a send action.
         /// </summary>
+        /// <param name="socket">Socket connection.</param>
+        /// <param name="sendAction">Action to use when send packets.</param>
         internal void Initialize(Socket socket, Action<ILitePacketStream> sendAction)
         {
             Socket = socket;
