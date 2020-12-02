@@ -183,7 +183,7 @@ namespace LiteNetwork.Protocol
         public virtual void WriteString(string value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteBytes(byte[] values) => Write(values);
+        public virtual void WriteBytes(byte[] values) => _writer.Write(values);
 
         /// <inheritdoc />
         public virtual void Write<T>(T value)
