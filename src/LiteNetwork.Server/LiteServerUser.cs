@@ -75,6 +75,7 @@ namespace LiteNetwork.Server
                 _disposed = true;
                 Socket.Dispose();
             }
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -244,6 +244,7 @@ namespace LiteNetwork.Server
             _socket.Dispose();
             _sender.Dispose();
             _acceptor.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
