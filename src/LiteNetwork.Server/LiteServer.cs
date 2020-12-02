@@ -42,7 +42,8 @@ namespace LiteNetwork.Server
         public IEnumerable<TUser> ConnectedUsers => _connectedUsers.Values;
 
         /// <summary>
-        /// Creates a new <see cref="LiteServer{TUser}"/> instance with a server configuration.
+        /// Creates a new <see cref="LiteServer{TUser}"/> instance with a server configuration
+        /// and a fault <see cref="ILitePacketProcessor"/>.
         /// </summary>
         /// <param name="configuration">Server configuration</param>
         public LiteServer(LiteServerConfiguration configuration)
@@ -52,9 +53,10 @@ namespace LiteNetwork.Server
 
         /// <summary>
         /// Creates a new <see cref="LiteServer{TUser}"/> instance with a server configuration
-        /// and a default <see cref="ILitePacketProcessor"/>.
+        /// and a <see cref="ILitePacketProcessor"/>.
         /// </summary>
         /// <param name="configuration">Server configuration</param>
+        /// <param name="packetProcessor">A <see cref="ILitePacketProcessor"/> to use.</param>
         public LiteServer(LiteServerConfiguration configuration, ILitePacketProcessor packetProcessor)
             : this(configuration, packetProcessor, null)
         {
@@ -62,9 +64,10 @@ namespace LiteNetwork.Server
 
         /// <summary>
         /// Creates a new <see cref="LiteServer{TUser}"/> instance with a server configuration,
-        /// an <see cref="IServiceProvider"/> and a default <see cref="ILiteP"/>.
+        /// an <see cref="IServiceProvider"/> and a default <see cref="LitePacketProcessor"/>.
         /// </summary>
-        /// <param name="configuration">Server configuration</param>
+        /// <param name="configuration">Server configuration.</param>
+        /// <param name="serviceProvider">Service provider to use.</param>
         public LiteServer(LiteServerConfiguration configuration, IServiceProvider serviceProvider)
             : this(configuration, new LitePacketProcessor(), serviceProvider)
         {

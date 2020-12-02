@@ -14,7 +14,6 @@ namespace LiteNetwork.Common.Internal
     {
         private readonly ReceiveStrategyType _receiveStrategy;
         private readonly Func<ILiteConnection, byte[], Task> _handlerAction;
-
         private readonly BlockingCollection<byte[]> _receiveMessageQueue = null!;
         private readonly CancellationToken _receiveCancellationToken;
         private readonly CancellationTokenSource _receiveCancellationTokenSource = null!;

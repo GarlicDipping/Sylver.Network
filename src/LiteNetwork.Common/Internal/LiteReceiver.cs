@@ -34,9 +34,10 @@ namespace LiteNetwork.Common.Internal
         public event EventHandler<Exception>? Error;
 
         /// <summary>
-        /// Creates a new <see cref="LiteReceiver"/> instance with a <see cref="ILitePacketProcessor"/>.
+        /// Creates a new <see cref="LiteReceiver"/> instance with a <see cref="ILitePacketProcessor"/> and a <see cref="ReceiveStrategyType"/>.
         /// </summary>
         /// <param name="packetProcessor">Packet processor to process incoming data and convert it into an exploitable packet stream.</param>
+        /// <param name="receiveStrategy">A <see cref="ReceiveStrategyType"/> to use.</param>
         protected LiteReceiver(ILitePacketProcessor packetProcessor, ReceiveStrategyType receiveStrategy)
         {
             _packetProcessor = packetProcessor;
@@ -213,7 +214,6 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         /// <param name="connection">Connection that received the message.</param>
         /// <param name="messageData">Message data.</param>
-        /// <returns></returns>
         internal async Task ProcessReceivedMessage(ILiteConnection connection, byte[] messageData)
         {
             try

@@ -26,6 +26,9 @@ namespace LiteNetwork.Server
         /// </summary>
         internal Action<ILitePacketStream>? SendAction { get; set; }
 
+        /// <summary>
+        /// Creates a new <see cref="LiteServerUser"/> instance.
+        /// </summary>
         public LiteServerUser()
         {
         }
@@ -48,6 +51,9 @@ namespace LiteNetwork.Server
             SendAction = sendAction;
         }
 
+        /// <summary>
+        /// Called when this user has been Connected.
+        /// </summary>
         protected internal virtual void OnConnected()
         {
         }
