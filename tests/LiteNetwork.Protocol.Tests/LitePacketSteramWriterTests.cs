@@ -244,6 +244,14 @@ namespace LiteNetwork.Protocol.Tests
             PacketStreamWritePrimitiveMethod((packet, value) => packet.WriteString(value), stringValue, stringValueArray, adjustBuffer: false);
         }
 
+        [Fact]
+        public void PacketStreamWriteByteArrayTest()
+        {
+            var buffer = _randomizer.Bytes(_randomizer.Byte());
+
+            PacketStreamWritePrimitiveMethod((packet, value) => packet.WriteBytes(value), buffer, buffer, adjustBuffer: false);
+        }
+
         private void PacketStreamWritePrimitive<T>(T valueToWrite, byte[] expectedByteArray, bool adjustBuffer = true)
         {
             using (ILitePacketStream packetStream = new LitePacketStream())

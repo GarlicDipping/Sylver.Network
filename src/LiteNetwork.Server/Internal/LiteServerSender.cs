@@ -19,6 +19,7 @@ namespace LiteNetwork.Server.Internal
             _writePool = ObjectPool.Create<SocketAsyncEventArgs>();
         }
 
+        /// <inheritdoc />
         protected override void ClearSocketEvent(SocketAsyncEventArgs socketAsyncEvent)
         {
             socketAsyncEvent.SetBuffer(null, 0, 0);
@@ -27,6 +28,7 @@ namespace LiteNetwork.Server.Internal
             _writePool.Return(socketAsyncEvent);
         }
 
+        /// <inheritdoc />
         protected override SocketAsyncEventArgs GetSocketEvent()
         {
             SocketAsyncEventArgs socketAsyncEvent = _writePool.Get();

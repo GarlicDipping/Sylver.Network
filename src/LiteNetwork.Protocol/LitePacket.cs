@@ -2,6 +2,9 @@
 
 namespace LiteNetwork.Protocol
 {
+    /// <summary>
+    /// Provides a default packet.
+    /// </summary>
     public class LitePacket : LitePacketStream
     {
         /// <summary>

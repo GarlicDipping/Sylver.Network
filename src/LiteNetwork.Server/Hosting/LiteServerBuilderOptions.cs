@@ -1,5 +1,6 @@
 ﻿using LiteNetwork.Protocol.Abstractions;
 using LiteNetwork.Protocol;
+using LiteNetwork.Common;
 
 namespace LiteNetwork.Server.Hosting
 {
@@ -27,6 +28,11 @@ namespace LiteNetwork.Server.Hosting
         /// Gets or sets the handled client buffer size.
         /// </summary>
         public int ClientBufferSize { get; set; } = LiteServerConfiguration.DefaultClientBufferSize;
+
+        /// <summary>
+        /// Gets or sets the receive strategy type.
+        /// </summary>
+        public ReceiveStrategyType ReceiveStrategy { get; set; }
 
         /// <summary>
         /// Gets the default server packet processor.

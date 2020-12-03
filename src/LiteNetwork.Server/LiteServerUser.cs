@@ -26,6 +26,9 @@ namespace LiteNetwork.Server
         /// </summary>
         internal Action<ILitePacketStream>? SendAction { get; set; }
 
+        /// <summary>
+        /// Creates a new <see cref="LiteServerUser"/> instance.
+        /// </summary>
         public LiteServerUser()
         {
         }
@@ -40,14 +43,20 @@ namespace LiteNetwork.Server
         public void Send(ILitePacketStream packet) => SendAction?.Invoke(packet);
 
         /// <summary>
-        /// Called when this user has been connected.
+        /// Initialize the <see cref="LiteServerUser"/> with the given <see cref="System.Net.Sockets.Socket"/>
+        /// and a send action.
         /// </summary>
+        /// <param name="socket">Socket connection.</param>
+        /// <param name="sendAction">Action to use when send packets.</param>
         internal void Initialize(Socket socket, Action<ILitePacketStream> sendAction)
         {
             Socket = socket;
             SendAction = sendAction;
         }
 
+        /// <summary>
+        /// Called when this user has been Connected.
+        /// </summary>
         protected internal virtual void OnConnected()
         {
         }
@@ -69,6 +78,7 @@ namespace LiteNetwork.Server
                 _disposed = true;
                 Socket.Dispose();
             }
+            GC.SuppressFinalize(this);
         }
     }
 }

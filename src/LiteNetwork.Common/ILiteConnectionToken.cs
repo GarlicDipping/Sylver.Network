@@ -4,6 +4,9 @@ using System.Net.Sockets;
 
 namespace LiteNetwork.Common
 {
+    /// <summary>
+    /// Provides a structure to use in sender/receiver process.
+    /// </summary>
     public interface ILiteConnectionToken : IDisposable
     {
         /// <summary>
