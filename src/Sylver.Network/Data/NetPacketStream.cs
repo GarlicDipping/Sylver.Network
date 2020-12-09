@@ -206,23 +206,50 @@ namespace Sylver.Network.Data
         /// <returns></returns>
         private T ReadPrimitive<T>()
         {
-            object primitiveValue = Type.GetTypeCode(typeof(T)) switch
+            object primitiveValue = default;
+
+            switch (Type.GetTypeCode(typeof(T)))
             {
-                TypeCode.Byte => _reader.ReadByte(),
-                TypeCode.SByte => _reader.ReadSByte(),
-                TypeCode.Boolean => _reader.ReadBoolean(),
-                TypeCode.Char => _reader.ReadChar(),
-                TypeCode.Int16 => _reader.ReadInt16(),
-                TypeCode.UInt16 => _reader.ReadUInt16(),
-                TypeCode.Int32 => _reader.ReadInt32(),
-                TypeCode.UInt32 => _reader.ReadUInt32(),
-                TypeCode.Single => _reader.ReadSingle(),
-                TypeCode.Double => _reader.ReadDouble(),
-                TypeCode.Int64 => _reader.ReadInt64(),
-                TypeCode.UInt64 => _reader.ReadUInt64(),
-                TypeCode.String => InternalReadString(),
-                _ => default
-            };
+                case TypeCode.Byte:
+                    primitiveValue = _reader.ReadByte();
+                    break;
+                case TypeCode.SByte:
+                    primitiveValue = _reader.ReadSByte();
+                    break;
+                case TypeCode.Boolean:
+                    primitiveValue = _reader.ReadBoolean();
+                    break;
+                case TypeCode.Char:
+                    primitiveValue = _reader.ReadChar();
+                    break;
+                case TypeCode.Int16:
+                    primitiveValue = _reader.ReadInt16();
+                    break;
+                case TypeCode.UInt16:
+                    primitiveValue = _reader.ReadUInt16();
+                    break;
+                case TypeCode.Int32:
+                    primitiveValue = _reader.ReadInt32();
+                    break;
+                case TypeCode.UInt32:
+                    primitiveValue = _reader.ReadUInt32();
+                    break;
+                case TypeCode.Single:
+                    primitiveValue = _reader.ReadSingle();
+                    break;
+                case TypeCode.Int64:
+                    primitiveValue = _reader.ReadInt64();
+                    break;
+                case TypeCode.UInt64:
+                    primitiveValue = _reader.ReadUInt64();
+                    break;
+                case TypeCode.Double:
+                    primitiveValue = _reader.ReadDouble();
+                    break;
+                case TypeCode.String:
+                    primitiveValue = InternalReadString();
+                    break;
+            }
 
             return (T)primitiveValue;
         }

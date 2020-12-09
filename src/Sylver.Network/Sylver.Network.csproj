@@ -13,7 +13,7 @@
     <PackageIcon>icon.png</PackageIcon>
     <Version>1.3.0</Version>
     <Description>Sylver.Network is a simple and fast networking library built with C# and the .NET Core Framework. It simplifies the creation of socket servers and clients over the TCP/IP protocol.</Description>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
