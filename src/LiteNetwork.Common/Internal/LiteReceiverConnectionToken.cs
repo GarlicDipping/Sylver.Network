@@ -12,7 +12,7 @@ namespace LiteNetwork.Common.Internal
     internal class LiteReceiverConnectionToken : ILiteConnectionToken
     {
         private readonly ReceiveStrategyType _receiveStrategy;
-        private readonly Func<ILiteConnection, byte[], Task> _handlerAction;
+        private readonly Action<ILiteConnection, byte[]> _handlerAction;
         private readonly BlockingCollection<byte[]> _receiveMessageQueue = null!;
         private readonly CancellationToken _receiveCancellationToken;
         private readonly CancellationTokenSource _receiveCancellationTokenSource = null!;
@@ -24,13 +24,12 @@ namespace LiteNetwork.Common.Internal
         public LiteDataToken DataToken { get; }
 
         /// <summary>
-        /// Creates a new <see cref="LiteReceiverConnectionToken"/> instance with a <see cref="ILiteConnection"/>
-        /// and a <see cref="System.Net.Sockets.Socket"/>.
+        /// Creates a new <see cref="LiteReceiverConnectionToken"/> instance with a <see cref="ILiteConnection"/>.
         /// </summary>
         /// <param name="connection">Current connection.</param>
         /// <param name="receiveStrategy">Receive strategy.</param>
         /// <param name="handlerAction">Action to execute when a packet message is being processed.</param>
-        public LiteReceiverConnectionToken(ILiteConnection connection, ReceiveStrategyType receiveStrategy, Func<ILiteConnection, byte[], Task> handlerAction)
+        public LiteReceiverConnectionToken(ILiteConnection connection, ReceiveStrategyType receiveStrategy, Action<ILiteConnection, byte[]> handlerAction)
         {
             Connection = connection;
             _receiveStrategy = receiveStrategy;
@@ -73,10 +72,9 @@ namespace LiteNetwork.Common.Internal
         }
 
         /// <summary>
-        /// Task that processed the received message queue until its cancellation is requested.
+        /// Processes the received message queue until cancellation is requested.
         /// </summary>
-        /// <returns></returns>
-        private async Task OnProcessMessageQueue()
+        private void OnProcessMessageQueue()
         {
             if (_receiveStrategy != ReceiveStrategyType.Queued)
             {
@@ -88,8 +86,7 @@ namespace LiteNetwork.Common.Internal
                 try
                 {
                     byte[] message = _receiveMessageQueue.Take(_receiveCancellationToken);
-
-                    await _handlerAction(Connection, message).ConfigureAwait(false);
+                    _handlerAction(Connection, message);
                 }
                 catch (OperationCanceledException)
                 {

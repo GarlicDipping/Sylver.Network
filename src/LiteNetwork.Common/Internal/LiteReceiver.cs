@@ -191,11 +191,11 @@ namespace LiteNetwork.Common.Internal
         {
             if (ReceiveStrategy == ReceiveStrategyType.Default)
             {
-                Task.Run(async () =>
+                Task.Run(() =>
                 {
                     foreach (var messageBuffer in messages)
                     {
-                        await ProcessReceivedMessage(connectionToken.Connection, messageBuffer);
+                        ProcessReceivedMessage(connectionToken.Connection, messageBuffer);
                     }
                 });
             }
@@ -213,8 +213,7 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         /// <param name="connection">Connection that received the message.</param>
         /// <param name="messageData">Message data.</param>
-        /// <returns>A <see cref="Task"/> that completes when process the received message.</returns>
-        internal async Task ProcessReceivedMessage(ILiteConnection connection, byte[] messageData)
+        internal async void ProcessReceivedMessage(ILiteConnection connection, byte[] messageData)
         {
             try
             {
