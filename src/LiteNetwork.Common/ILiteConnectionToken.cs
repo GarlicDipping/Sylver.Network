@@ -1,10 +1,11 @@
 ﻿using LiteNetwork.Protocol;
 using System;
+using System.Collections.Generic;
 
 namespace LiteNetwork.Common
 {
     /// <summary>
-    /// Provides a structure to use in sender/receiver process.
+    /// Provides a structure to used in receiver process.
     /// </summary>
     public interface ILiteConnectionToken : IDisposable
     {
@@ -19,9 +20,9 @@ namespace LiteNetwork.Common
         LiteDataToken DataToken { get; }
 
         /// <summary>
-        /// Adds the given message buffer into the received message queue.
+        /// Process a received messages.
         /// </summary>
-        /// <param name="message">Message data buffer to add.</param>
-        void EnqueueMessage(byte[] message);
+        /// <param name="messages">Collection of message data buffers.</param>
+        void ProcessReceivedMessages(IEnumerable<byte[]> messages);
     }
 }

@@ -51,7 +51,15 @@ namespace LiteNetwork.Common.Internal
         /// <param name="connection">User connection.</param>
         public void StartReceiving(ILiteConnection connection)
         {
-            var token = new LiteReceiverConnectionToken(connection, ReceiveStrategy, ProcessReceivedMessage);
+            ILiteConnectionToken token;
+            if (ReceiveStrategy == ReceiveStrategyType.Default)
+            {
+                token = new LiteDefaultConnectionToken(connection, ProcessReceivedMessage);
+            }
+            else
+            {
+                token = new LiteQueuedConnectionToken(connection, ProcessReceivedMessage);
+            }
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
             socketAsyncEvent.UserToken = token;
 
@@ -94,7 +102,7 @@ namespace LiteNetwork.Common.Internal
 
                         if (messages.Any())
                         {
-                            ProcessReceivedMessages(clientToken, messages);
+                            clientToken.ProcessReceivedMessages(messages);
                         }
 
                         if (clientToken.DataToken.DataStartOffset >= socketAsyncEvent.BytesTransferred)
@@ -180,33 +188,6 @@ namespace LiteNetwork.Common.Internal
         /// </summary>
         /// <param name="exception">Thrown exception.</param>
         private void OnError(Exception exception) => Error?.Invoke(this, exception);
-
-        /// <summary>
-        /// Process a received message.
-        /// </summary>
-        /// <param name="connectionToken">Current connection token.</param>
-        /// <param name="messages">Collection of message data buffers.</param>
-        [ExcludeFromCodeCoverage]
-        protected virtual void ProcessReceivedMessages(ILiteConnectionToken connectionToken, IEnumerable<byte[]> messages)
-        {
-            if (ReceiveStrategy == ReceiveStrategyType.Default)
-            {
-                Task.Run(() =>
-                {
-                    foreach (var messageBuffer in messages)
-                    {
-                        ProcessReceivedMessage(connectionToken.Connection, messageBuffer);
-                    }
-                });
-            }
-            else if (ReceiveStrategy == ReceiveStrategyType.Queued)
-            {
-                foreach (byte[] message in messages)
-                {
-                    connectionToken.EnqueueMessage(message);
-                }
-            }
-        }
 
         /// <summary>
         /// Process a single received message.

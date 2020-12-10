@@ -16,7 +16,7 @@ namespace LiteNetwork.Common
         Guid Id { get; }
 
         /// <summary>
-        /// Gets or sets the user's connection socket
+        /// Gets the connection socket.
         /// </summary>
         Socket Socket { get; }
 
