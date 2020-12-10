@@ -1,6 +1,5 @@
 ﻿using LiteNetwork.Protocol;
 using System;
-using System.Net.Sockets;
 
 namespace LiteNetwork.Common
 {
@@ -13,11 +12,6 @@ namespace LiteNetwork.Common
         /// Gets the connection attached to the current token.
         /// </summary>
         ILiteConnection Connection { get; }
-
-        /// <summary>
-        /// Gets the socket connection.
-        /// </summary>
-        Socket Socket { get; }
 
         /// <summary>
         /// Gets the data token.

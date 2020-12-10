@@ -49,10 +49,9 @@ namespace LiteNetwork.Common.Internal
         /// Starts the receive process for the given connection and socket.
         /// </summary>
         /// <param name="connection">User connection.</param>
-        /// <param name="socket">User socket.</param>
-        public void StartReceiving(ILiteConnection connection, Socket socket)
+        public void StartReceiving(ILiteConnection connection)
         {
-            var token = new LiteReceiverConnectionToken(connection, socket, ReceiveStrategy, ProcessReceivedMessage);
+            var token = new LiteReceiverConnectionToken(connection, ReceiveStrategy, ProcessReceivedMessage);
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
             socketAsyncEvent.UserToken = token;
 
@@ -66,7 +65,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="socketAsyncEvent">Socket async event arguments.</param>
         private void ReceiveData(ILiteConnectionToken userConnectionToken, SocketAsyncEventArgs socketAsyncEvent)
         {
-            if (!userConnectionToken.Socket.ReceiveAsync(socketAsyncEvent))
+            if (!userConnectionToken.Connection.Socket.ReceiveAsync(socketAsyncEvent))
             {
                 ProcessReceive(userConnectionToken, socketAsyncEvent);
             }

@@ -1,5 +1,6 @@
 ﻿using LiteNetwork.Protocol.Abstractions;
 using System;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace LiteNetwork.Common
@@ -13,6 +14,11 @@ namespace LiteNetwork.Common
         /// Gets the connection unique identifier.
         /// </summary>
         Guid Id { get; }
+
+        /// <summary>
+        /// Gets or sets the user's connection socket
+        /// </summary>
+        Socket Socket { get; }
 
         /// <summary>
         /// Handle an incoming <see cref="ILitePacketStream"/> asynchronously.

@@ -1,7 +1,6 @@
 ﻿using LiteNetwork.Protocol;
 using System;
 using System.Collections.Concurrent;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,9 +21,6 @@ namespace LiteNetwork.Common.Internal
         public ILiteConnection Connection { get; }
 
         /// <inheritdoc />
-        public Socket Socket { get; }
-
-        /// <inheritdoc />
         public LiteDataToken DataToken { get; }
 
         /// <summary>
@@ -32,13 +28,11 @@ namespace LiteNetwork.Common.Internal
         /// and a <see cref="System.Net.Sockets.Socket"/>.
         /// </summary>
         /// <param name="connection">Current connection.</param>
-        /// <param name="socket">Current socket connection.</param>
         /// <param name="receiveStrategy">Receive strategy.</param>
         /// <param name="handlerAction">Action to execute when a packet message is being processed.</param>
-        public LiteReceiverConnectionToken(ILiteConnection connection, Socket socket, ReceiveStrategyType receiveStrategy, Func<ILiteConnection, byte[], Task> handlerAction)
+        public LiteReceiverConnectionToken(ILiteConnection connection, ReceiveStrategyType receiveStrategy, Func<ILiteConnection, byte[], Task> handlerAction)
         {
             Connection = connection;
-            Socket = socket;
             _receiveStrategy = receiveStrategy;
             _handlerAction = handlerAction;
             DataToken = new LiteDataToken();
