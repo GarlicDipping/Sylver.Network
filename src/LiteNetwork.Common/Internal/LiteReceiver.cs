@@ -199,10 +199,10 @@ namespace LiteNetwork.Common.Internal
         }
 
         /// <summary>
-        /// Build an user connection token.
+        /// Builds an user connection token with the given <see cref="ILiteConnection"/>.
         /// </summary>
         /// <param name="connection">The connection associated with the token.</param>
-        /// <returns>A new token implementation.</returns>
+        /// <returns>A new connection token implementation.</returns>
         private ILiteConnectionToken BuildConnectionToken(ILiteConnection connection)
             => ReceiveStrategy switch
             {
