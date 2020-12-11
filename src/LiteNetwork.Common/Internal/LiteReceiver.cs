@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace LiteNetwork.Common.Internal
 {
@@ -51,15 +50,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="connection">User connection.</param>
         public void StartReceiving(ILiteConnection connection)
         {
-            ILiteConnectionToken token;
-            if (ReceiveStrategy == ReceiveStrategyType.Default)
-            {
-                token = new LiteDefaultConnectionToken(connection, ProcessReceivedMessage);
-            }
-            else
-            {
-                token = new LiteQueuedConnectionToken(connection, ProcessReceivedMessage);
-            }
+            ILiteConnectionToken token = BuildConnectionToken(connection);
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
             socketAsyncEvent.UserToken = token;
 
@@ -206,5 +197,18 @@ namespace LiteNetwork.Common.Internal
                 OnError(e);
             }
         }
+
+        /// <summary>
+        /// Build an user connection token.
+        /// </summary>
+        /// <param name="connection">The connection associated with the token.</param>
+        /// <returns>A new token implementation.</returns>
+        private ILiteConnectionToken BuildConnectionToken(ILiteConnection connection)
+            => ReceiveStrategy switch
+            {
+                ReceiveStrategyType.Default => new LiteDefaultConnectionToken(connection, ProcessReceivedMessage),
+                ReceiveStrategyType.Queued => new LiteQueuedConnectionToken(connection, ProcessReceivedMessage),
+                _ => throw new NotImplementedException(),
+            };
     }
 }

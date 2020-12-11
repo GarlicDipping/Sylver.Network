@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
-using System.Threading.Tasks;
+﻿using LiteNetwork.Server.Abstractions;
+using Microsoft.Extensions.Hosting;
 using System.Threading;
-using LiteNetwork.Server.Abstractions;
+using System.Threading.Tasks;
 
 namespace LiteNetwork.Server.Hosting
 {
