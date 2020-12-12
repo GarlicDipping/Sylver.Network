@@ -25,11 +25,6 @@ namespace LiteNetwork.Server
         public Socket Socket { get; internal set; } = null!;
 
         /// <summary>
-        /// Defines an action to send an <see cref="ILitePacketStream"/>.
-        /// </summary>
-        internal Action<ILitePacketStream>? SendAction { get; set; }
-
-        /// <summary>
         /// Creates a new <see cref="LiteServerUser"/> instance.
         /// </summary>
         public LiteServerUser()

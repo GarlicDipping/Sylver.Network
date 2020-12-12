@@ -68,7 +68,7 @@ namespace LiteNetwork.Common.Internal
         }
 
         /// <summary>
-        /// Sends a <see cref="LiteMessage"/>.
+        /// Sends a message to the current connection.
         /// </summary>
         /// <param name="messageData">Message data buffer to be sent.</param>
         public void Send(byte[] messageData) => _sendingCollection.Add(messageData);
