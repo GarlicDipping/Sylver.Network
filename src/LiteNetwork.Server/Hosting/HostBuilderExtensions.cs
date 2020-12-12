@@ -32,7 +32,7 @@ namespace LiteNetwork.Server.Hosting
                     var liteServerBuilder = new LiteServerBuilderOptions();
                     builder(hostContext, liteServerBuilder);
 
-                    var configuration = new LiteServerConfiguration(liteServerBuilder.Host, liteServerBuilder.Port, 
+                    var configuration = new LiteServerConfiguration(liteServerBuilder.Host, liteServerBuilder.Port,
                         liteServerBuilder.Backlog, liteServerBuilder.ClientBufferSize);
                     var server = new LiteServer<TLiteServerUser>(configuration, liteServerBuilder.PacketProcessor, serviceProvider);
 
@@ -78,6 +78,54 @@ namespace LiteNetwork.Server.Hosting
                         liteServerBuilder.Backlog, liteServerBuilder.ClientBufferSize);
 
                     return ActivatorUtilities.CreateInstance<TLiteServer>(serviceProvider, configuration, liteServerBuilder.PacketProcessor);
+                });
+
+                services.AddHostedService(serviceProvider =>
+                {
+                    var serverInstance = serviceProvider.GetRequiredService<ILiteServer<TLiteServerUser>>();
+
+                    return new LiteServerHostedService<TLiteServerUser>(serverInstance);
+                });
+            });
+
+            return hostBuilder;
+        }
+
+        /// <summary>
+        /// Initializes a <typeparamref name="TLiteServerImplementation"/> with the specified <typeparamref name="TLiteServerUser"/>.
+        /// </summary>
+        /// <typeparam name="TLiteServer">LiteServer abstraction</typeparam>
+        /// <typeparam name="TLiteServerImplementation">LiteServer implementation.</typeparam>
+        /// <typeparam name="TLiteServerUser">LiteServer user.</typeparam>
+        /// <param name="hostBuilder">Current host builder.</param>
+        /// <param name="builder">LiteServer builder.</param>
+        /// <returns>The <see cref="IHostBuilder"/>.</returns>
+        public static IHostBuilder UseLiteServer<TLiteServer, TLiteServerImplementation, TLiteServerUser>(this IHostBuilder hostBuilder, Action<HostBuilderContext, LiteServerBuilderOptions> builder)
+            where TLiteServer : class
+            where TLiteServerImplementation : class, TLiteServer, ILiteServer<TLiteServerUser>
+            where TLiteServerUser : LiteServerUser
+        {
+            if (hostBuilder is null)
+            {
+                throw new ArgumentNullException(nameof(hostBuilder));
+            }
+
+            hostBuilder.ConfigureServices((hostContext, services) =>
+            {
+                services.AddSingleton<TLiteServer, TLiteServerImplementation>(serviceProvider =>
+                {
+                    var liteServerBuilder = new LiteServerBuilderOptions();
+                    builder(hostContext, liteServerBuilder);
+
+                    var configuration = new LiteServerConfiguration(liteServerBuilder.Host, liteServerBuilder.Port,
+                        liteServerBuilder.Backlog, liteServerBuilder.ClientBufferSize);
+
+                    return ActivatorUtilities.CreateInstance<TLiteServerImplementation>(serviceProvider, configuration, liteServerBuilder.PacketProcessor);
+                });
+
+                services.AddSingleton<ILiteServer<TLiteServerUser>, TLiteServerImplementation>(serviceProvider =>
+                {
+                    return (TLiteServerImplementation)serviceProvider.GetRequiredService<TLiteServer>();
                 });
 
                 services.AddHostedService(serviceProvider =>
