@@ -9,12 +9,13 @@ namespace LiteNetwork.Common.Internal
     /// <summary>
     /// Provides a mechanism to send data.
     /// </summary>
-    internal abstract class LiteSender : IDisposable
+    internal class LiteSender : IDisposable
     {
-        private readonly BlockingCollection<LiteMessage> _sendingCollection;
+        private readonly BlockingCollection<byte[]> _sendingCollection;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly CancellationToken _cancellationToken;
-
+        private readonly ILiteConnection _connection;
+        private readonly SocketAsyncEventArgs _socketAsyncEvent;
         private bool _disposedValue;
 
         /// <summary>
@@ -25,11 +26,14 @@ namespace LiteNetwork.Common.Internal
         /// <summary>
         /// Creates and initializes a new <see cref="LiteSender"/> base instance.
         /// </summary>
-        protected LiteSender()
+        public LiteSender(ILiteConnection connection)
         {
-            _sendingCollection = new BlockingCollection<LiteMessage>();
+            _sendingCollection = new BlockingCollection<byte[]>();
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationToken = _cancellationTokenSource.Token;
+            _connection = connection;
+            _socketAsyncEvent = new SocketAsyncEventArgs();
+            _socketAsyncEvent.Completed += OnSendCompleted;
         }
 
         /// <summary>
@@ -58,27 +62,16 @@ namespace LiteNetwork.Common.Internal
             {
                 throw new InvalidOperationException("Sender is not running.");
             }
+
             _cancellationTokenSource.Cancel(false);
             IsRunning = false;
         }
-        
-        /// <summary>
-        /// Sends a <see cref="LiteMessage"/>.
-        /// </summary>
-        /// <param name="message">Lite message to be sent.</param>
-        public void Send(LiteMessage message) => _sendingCollection.Add(message);
 
         /// <summary>
-        /// Gets a <see cref="SocketAsyncEventArgs"/> for the sending operation.
+        /// Sends a message to the current connection.
         /// </summary>
-        /// <returns></returns>
-        protected abstract SocketAsyncEventArgs GetSocketEvent();
-
-        /// <summary>
-        /// Clears an used <see cref="SocketAsyncEventArgs"/>.
-        /// </summary>
-        /// <param name="socketAsyncEvent">Socket async vent arguments to clear.</param>
-        protected abstract void ClearSocketEvent(SocketAsyncEventArgs socketAsyncEvent);
+        /// <param name="messageData">Message data buffer to be sent.</param>
+        public void Send(byte[] messageData) => _sendingCollection.Add(messageData);
 
         /// <summary>
         /// Dequeue the message collection and sends the messages to their recipients.
@@ -89,30 +82,19 @@ namespace LiteNetwork.Common.Internal
             {
                 try
                 {
-                    LiteMessage message = _sendingCollection.Take(_cancellationToken);
-                    SendMessage(message.Connection, message.Data);
+                    byte[] message = _sendingCollection.Take(_cancellationToken);
+
+                    _socketAsyncEvent.SetBuffer(message, 0, message.Length);
+
+                    if (!_connection.Socket.SendAsync(_socketAsyncEvent))
+                    {
+                        OnSendCompleted(this, _socketAsyncEvent);
+                    }
                 }
                 catch (OperationCanceledException)
                 {
                     // The operation has been cancelled: nothing to do
                 }
-            }
-        }
-
-        /// <summary>
-        /// Sends the message data to the given connection <see cref="Socket"/>.
-        /// </summary>
-        /// <param name="connectionSocket">Client connection.</param>
-        /// <param name="data">Message data.</param>
-        private void SendMessage(Socket connectionSocket, byte[] data)
-        {
-            SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
-
-            socketAsyncEvent.SetBuffer(data, 0, data.Length);
-
-            if (!connectionSocket.SendAsync(socketAsyncEvent))
-            {
-                OnSendCompleted(this, socketAsyncEvent);
             }
         }
 
@@ -123,7 +105,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="e">Socket async event arguments.</param>
         protected void OnSendCompleted(object? sender, SocketAsyncEventArgs e)
         {
-            ClearSocketEvent(e);
+            _socketAsyncEvent.SetBuffer(null, 0, 0);
         }
 
         /// <summary>

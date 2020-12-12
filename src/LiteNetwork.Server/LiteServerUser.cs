@@ -1,4 +1,5 @@
 ﻿using LiteNetwork.Common;
+using LiteNetwork.Common.Internal;
 using LiteNetwork.Protocol.Abstractions;
 using System;
 using System.Net.Sockets;
@@ -11,6 +12,8 @@ namespace LiteNetwork.Server
     /// </summary>
     public class LiteServerUser : ILiteConnection, IDisposable
     {
+        private readonly LiteSender _sender;
+
         private bool _disposed;
 
         /// <inheritdoc />
@@ -22,15 +25,11 @@ namespace LiteNetwork.Server
         public Socket Socket { get; internal set; } = null!;
 
         /// <summary>
-        /// Defines an action to send an <see cref="ILitePacketStream"/>.
-        /// </summary>
-        internal Action<ILitePacketStream>? SendAction { get; set; }
-
-        /// <summary>
         /// Creates a new <see cref="LiteServerUser"/> instance.
         /// </summary>
         public LiteServerUser()
         {
+            _sender = new LiteSender(this);
         }
 
         /// <inheritdoc />
@@ -40,18 +39,16 @@ namespace LiteNetwork.Server
         }
 
         /// <inheritdoc />
-        public void Send(ILitePacketStream packet) => SendAction?.Invoke(packet);
+        public void Send(ILitePacketStream packet) => _sender.Send(packet.Buffer);
 
         /// <summary>
-        /// Initialize the <see cref="LiteServerUser"/> with the given <see cref="System.Net.Sockets.Socket"/>
-        /// and a send action.
+        /// Initialize the <see cref="LiteServerUser"/> with the given <see cref="System.Net.Sockets.Socket"/> and a send action.
         /// </summary>
         /// <param name="socket">Socket connection.</param>
-        /// <param name="sendAction">Action to use when send packets.</param>
-        internal void Initialize(Socket socket, Action<ILitePacketStream> sendAction)
+        internal void Initialize(Socket socket)
         {
             Socket = socket;
-            SendAction = sendAction;
+            _sender.Start();
         }
 
         /// <summary>
@@ -76,8 +73,10 @@ namespace LiteNetwork.Server
             if (!_disposed)
             {
                 _disposed = true;
+                _sender.Dispose();
                 Socket.Dispose();
             }
+
             GC.SuppressFinalize(this);
         }
     }
