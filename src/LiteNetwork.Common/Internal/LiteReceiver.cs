@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace LiteNetwork.Common.Internal
 {
@@ -49,10 +48,9 @@ namespace LiteNetwork.Common.Internal
         /// Starts the receive process for the given connection and socket.
         /// </summary>
         /// <param name="connection">User connection.</param>
-        /// <param name="socket">User socket.</param>
-        public void StartReceiving(ILiteConnection connection, Socket socket)
+        public void StartReceiving(ILiteConnection connection)
         {
-            var token = new LiteReceiverConnectionToken(connection, socket, ReceiveStrategy, ProcessReceivedMessage);
+            ILiteConnectionToken token = BuildConnectionToken(connection);
             SocketAsyncEventArgs socketAsyncEvent = GetSocketEvent();
             socketAsyncEvent.UserToken = token;
 
@@ -66,7 +64,7 @@ namespace LiteNetwork.Common.Internal
         /// <param name="socketAsyncEvent">Socket async event arguments.</param>
         private void ReceiveData(ILiteConnectionToken userConnectionToken, SocketAsyncEventArgs socketAsyncEvent)
         {
-            if (!userConnectionToken.Socket.ReceiveAsync(socketAsyncEvent))
+            if (!userConnectionToken.Connection.Socket.ReceiveAsync(socketAsyncEvent))
             {
                 ProcessReceive(userConnectionToken, socketAsyncEvent);
             }
@@ -95,7 +93,7 @@ namespace LiteNetwork.Common.Internal
 
                         if (messages.Any())
                         {
-                            ProcessReceivedMessages(clientToken, messages);
+                            clientToken.ProcessReceivedMessages(messages);
                         }
 
                         if (clientToken.DataToken.DataStartOffset >= socketAsyncEvent.BytesTransferred)
@@ -183,39 +181,11 @@ namespace LiteNetwork.Common.Internal
         private void OnError(Exception exception) => Error?.Invoke(this, exception);
 
         /// <summary>
-        /// Process a received message.
-        /// </summary>
-        /// <param name="connectionToken">Current connection token.</param>
-        /// <param name="messages">Collection of message data buffers.</param>
-        [ExcludeFromCodeCoverage]
-        protected virtual void ProcessReceivedMessages(ILiteConnectionToken connectionToken, IEnumerable<byte[]> messages)
-        {
-            if (ReceiveStrategy == ReceiveStrategyType.Default)
-            {
-                Task.Run(async () =>
-                {
-                    foreach (var messageBuffer in messages)
-                    {
-                        await ProcessReceivedMessage(connectionToken.Connection, messageBuffer);
-                    }
-                });
-            }
-            else if (ReceiveStrategy == ReceiveStrategyType.Queued)
-            {
-                foreach (byte[] message in messages)
-                {
-                    connectionToken.EnqueueMessage(message);
-                }
-            }
-        }
-
-        /// <summary>
         /// Process a single received message.
         /// </summary>
         /// <param name="connection">Connection that received the message.</param>
         /// <param name="messageData">Message data.</param>
-        /// <returns>A <see cref="Task"/> that completes when process the received message.</returns>
-        internal async Task ProcessReceivedMessage(ILiteConnection connection, byte[] messageData)
+        internal async void ProcessReceivedMessage(ILiteConnection connection, byte[] messageData)
         {
             try
             {
@@ -227,5 +197,18 @@ namespace LiteNetwork.Common.Internal
                 OnError(e);
             }
         }
+
+        /// <summary>
+        /// Builds an user connection token with the given <see cref="ILiteConnection"/>.
+        /// </summary>
+        /// <param name="connection">The connection associated with the token.</param>
+        /// <returns>A new connection token implementation.</returns>
+        private ILiteConnectionToken BuildConnectionToken(ILiteConnection connection)
+            => ReceiveStrategy switch
+            {
+                ReceiveStrategyType.Default => new LiteDefaultConnectionToken(connection, ProcessReceivedMessage),
+                ReceiveStrategyType.Queued => new LiteQueuedConnectionToken(connection, ProcessReceivedMessage),
+                _ => throw new NotImplementedException(),
+            };
     }
 }

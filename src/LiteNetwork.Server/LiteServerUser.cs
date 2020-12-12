@@ -19,7 +19,7 @@ namespace LiteNetwork.Server
         /// <summary>
         /// Gets or sets the user's connection socket
         /// </summary>
-        internal Socket Socket { get; set; } = null!;
+        public Socket Socket { get; internal set; } = null!;
 
         /// <summary>
         /// Defines an action to send an <see cref="ILitePacketStream"/>.

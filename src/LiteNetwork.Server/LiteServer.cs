@@ -301,7 +301,7 @@ namespace LiteNetwork.Server
             user.Initialize(e.AcceptSocket, packet => SendTo(user, packet));
             _logger?.LogInformation($"New user connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
             user.OnConnected();
-            _receiver.StartReceiving(user, user.Socket);
+            _receiver.StartReceiving(user);
         }
 
         private void OnAcceptorError(object? sender, Exception e)

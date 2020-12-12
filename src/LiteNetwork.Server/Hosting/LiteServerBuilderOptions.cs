@@ -1,6 +1,6 @@
-﻿using LiteNetwork.Protocol.Abstractions;
+﻿using LiteNetwork.Common;
 using LiteNetwork.Protocol;
-using LiteNetwork.Common;
+using LiteNetwork.Protocol.Abstractions;
 
 namespace LiteNetwork.Server.Hosting
 {
