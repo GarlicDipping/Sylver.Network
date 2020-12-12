@@ -1,6 +1,5 @@
 ﻿using LiteNetwork.Common;
 using LiteNetwork.Common.Exceptions;
-using LiteNetwork.Common.Internal;
 using LiteNetwork.Protocol;
 using LiteNetwork.Protocol.Abstractions;
 using LiteNetwork.Server.Abstractions;
@@ -30,7 +29,6 @@ namespace LiteNetwork.Server
         private readonly Socket _socket;
         private readonly LiteServerAcceptor _acceptor;
         private readonly LiteServerReceiver _receiver;
-        private readonly LiteServerSender _sender;
 
         /// <inheritdoc />
         public bool IsRunning { get; private set; }
@@ -101,8 +99,6 @@ namespace LiteNetwork.Server
             _receiver = new LiteServerReceiver(_packetProcessor, Configuration.ReceiveStrategy, Configuration.ClientBufferSize);
             _receiver.Disconnected += OnDisconnected;
             _receiver.Error += OnReceiverError;
-
-            _sender = new LiteServerSender();
         }
 
         /// <inheritdoc />
@@ -124,7 +120,6 @@ namespace LiteNetwork.Server
             IPEndPoint localEndPoint = await LiteNetworkHelpers.CreateIpEndPointAsync(Configuration.Host, Configuration.Port).ConfigureAwait(false);
             _socket.Bind(localEndPoint);
             _socket.Listen(Configuration.Backlog);
-            _sender.Start();
             _acceptor.StartAccept();
             IsRunning = true;
 
@@ -159,7 +154,6 @@ namespace LiteNetwork.Server
             }
 
             _connectedUsers.Clear();
-            _sender.Stop();
 
             IsRunning = false;
             OnAfterStop();
@@ -204,7 +198,7 @@ namespace LiteNetwork.Server
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            _sender.Send(new LiteMessage(user.Socket, packet.Buffer));
+            user.Send(packet);
         }
 
         /// <inheritdoc />
@@ -220,11 +214,9 @@ namespace LiteNetwork.Server
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            byte[] messageData = packet.Buffer;
-
             foreach (TUser connection in users)
             {
-                _sender.Send(new LiteMessage(connection.Socket, messageData));
+                SendTo(connection, packet);
             }
         }
 
@@ -242,7 +234,6 @@ namespace LiteNetwork.Server
             }
 
             _socket.Dispose();
-            _sender.Dispose();
             _acceptor.Dispose();
             GC.SuppressFinalize(this);
         }
@@ -298,7 +289,7 @@ namespace LiteNetwork.Server
                 throw new LiteNetworkException($"The accepted socket is null.");
             }
 
-            user.Initialize(e.AcceptSocket, packet => SendTo(user, packet));
+            user.Initialize(e.AcceptSocket);
             _logger?.LogInformation($"New user connected from '{user.Socket.RemoteEndPoint}' with id '{user.Id}'.");
             user.OnConnected();
             _receiver.StartReceiving(user);

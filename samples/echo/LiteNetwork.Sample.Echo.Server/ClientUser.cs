@@ -14,6 +14,11 @@ namespace LiteNetwork.Sample.Echo.Server
 
             Console.WriteLine($"Received from '{Id}': {receivedMessage}");
 
+            using var packet = new LitePacket();
+            packet.Write($"Received: '{receivedMessage}'.");
+
+            Send(packet);
+
             return base.HandleMessageAsync(incomingPacketStream);
         }
 
