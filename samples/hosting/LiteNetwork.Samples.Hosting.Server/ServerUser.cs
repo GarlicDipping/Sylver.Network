@@ -8,6 +8,13 @@ namespace LiteNetwork.Samples.Hosting.Server
 {
     public class ServerUser : LiteServerUser
     {
+        private readonly ICustomServer _server;
+
+        public ServerUser(ICustomServer server)
+        {
+            _server = server;
+        }
+
         public override Task HandleMessageAsync(ILitePacketStream incomingPacketStream)
         {
             string receivedMessage = incomingPacketStream.ReadString();
