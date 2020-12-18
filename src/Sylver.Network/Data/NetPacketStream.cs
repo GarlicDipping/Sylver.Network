@@ -179,7 +179,7 @@ namespace Sylver.Network.Data
         public virtual void WriteString(string value) => Write(value);
 
         /// <inheritdoc />
-        public virtual void WriteBytes(byte[] values) => Write(values);
+        public virtual void WriteBytes(byte[] values) => WriteByteArray(values);
 
         /// <inheritdoc />
         public virtual void Write<T>(T value)
@@ -329,6 +329,11 @@ namespace Sylver.Network.Data
                     }
                     break;
             }
+        }
+
+        private void WriteByteArray(byte[] arr)
+        {
+            _writer.Write(arr);
         }
     }
 }
