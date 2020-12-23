@@ -3,13 +3,14 @@ using Sylver.Network.Infrastructure;
 using System;
 using System.Buffers;
 using System.Net.Sockets;
+using Microsoft.Extensions.ObjectPool;
 
 namespace Sylver.Network.Client.Internal
 {
     internal class NetClientReceiver : NetReceiver
     {
         private readonly INetClient _client;
-        private readonly SocketAsyncEventArgs _socketAsyncEvent;
+        private readonly ObjectPool<SocketAsyncEventArgs> _readPool;
 
         /// <summary>
         /// Creates a new <see cref="NetClientReceiver"/> instance.
@@ -19,8 +20,7 @@ namespace Sylver.Network.Client.Internal
             : base(client.PacketProcessor)
         {
             _client = client;
-            _socketAsyncEvent = new SocketAsyncEventArgs();
-            _socketAsyncEvent.Completed += OnCompleted;
+            _readPool = ObjectPool.Create<SocketAsyncEventArgs>();
         }
 
         /// <inheritdoc />
@@ -30,15 +30,21 @@ namespace Sylver.Network.Client.Internal
 
             socketAsyncEvent.SetBuffer(null, 0, 0);
             socketAsyncEvent.UserToken = null;
+            socketAsyncEvent.Completed -= OnCompleted;
+
+            _readPool.Return(socketAsyncEvent);
         }
 
         /// <inheritdoc />
         protected override SocketAsyncEventArgs GetSocketEvent()
         {
             int receiveBufferLength = _client.ClientConfiguration.BufferSize;
-            _socketAsyncEvent.SetBuffer(ArrayPool<byte>.Shared.Rent(receiveBufferLength), 0, receiveBufferLength);
+            SocketAsyncEventArgs socketAsyncEvent = _readPool.Get();
 
-            return _socketAsyncEvent;
+            socketAsyncEvent.SetBuffer(ArrayPool<byte>.Shared.Rent(receiveBufferLength), 0, receiveBufferLength);
+            socketAsyncEvent.Completed += OnCompleted;
+
+            return socketAsyncEvent;
         }
 
         /// <inheritdoc />
